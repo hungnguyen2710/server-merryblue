@@ -1,0 +1,11 @@
+{
+    "name": "Tiktok",
+    "alias": "tiktok",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Tiktok\\Providers\\TiktokServiceProvider"
+    ],
+    "files": []
+}
