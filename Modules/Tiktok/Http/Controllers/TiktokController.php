@@ -2,9 +2,11 @@
 
 namespace Modules\Tiktok\Http\Controllers;
 
+use App\helper\TikTok;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+
 
 class TiktokController extends Controller
 {
@@ -12,9 +14,17 @@ class TiktokController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('tiktok::index');
+        $request->validate([
+            'url' => 'required'
+        ]);
+        $url = $request->url;
+        $res = (new TikTok())
+            ->setUseragent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36')
+            ->url($url)
+            ->getData();
+        return $res;
     }
 
     /**
