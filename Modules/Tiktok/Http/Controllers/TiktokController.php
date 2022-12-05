@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpClient\HttpClient;
 
 
 class TiktokController extends AppBaseController
@@ -21,36 +20,11 @@ class TiktokController extends AppBaseController
     public function index(Request $request)
     {
 
-
-        $headers = [
-            'sec-fetch-user' => '?1',
-            'sec-ch-ua-mobile' => '?0',
-            'sec-fetch-site' => 'none',
-            'sec-fetch-dest' => 'document',
-            'sec-fetch-mode' => 'navigate',
-            'cache-control' => 'max-age=0',
-            'authority' => 'https://www.tiktok.com/',
-            'upgrade-insecure-requests' => '1',
-            'accept-language' => 'en-GB,en;q=0.9,tr-TR;q=0.8,tr;q=0.7,en-US;q=0.6',
-            'sec-ch-ua' => '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
-            'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'cookie' => 'sb=Rn8BYQvCEb2fpMQZjsd6L382; datr=Rn8BYbyhXgw9RlOvmsosmVNT; c_user=100003164630629; _fbp=fb.1.1629876126997.444699739; wd=1920x939; spin=r.1004812505_b.trunk_t.1638730393_s.1_v.2_; xs=28%3A8ROnP0aeVF8XcQ%3A2%3A1627488145%3A-1%3A4916%3A%3AAcWIuSjPy2mlTPuZAeA2wWzHzEDuumXI89jH8a_QIV8; fr=0jQw7hcrFdas2ZeyT.AWVpRNl_4noCEs_hb8kaZahs-jA.BhrQqa.3E.AAA.0.0.BhrQqa.AWUu879ZtCw',
-        ];
-
-        $redirectCheckClient = HttpClient::create([
-            'headers' => $headers,
+        $request->validate([
+            'url' => 'required'
         ]);
-
-        $client = HttpClient::create([
-            'headers' => $headers,
-        ]);
-        $response = $client->request('GET', $request->url);
-        $datas = $response->getContent();
-
-
-
-        $resp = $datas;
+        $url = $request->url;
+        $resp = $this->getContent($url);
         //echo "$resp";
         $check = explode('"downloadAddr":"', $resp);
         if (count($check) > 1) {
@@ -104,12 +78,12 @@ class TiktokController extends AppBaseController
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => false,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_USERAGENT => 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Mobile Safari/537.36',
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
             CURLOPT_ENCODING => "utf-8",
             CURLOPT_AUTOREFERER => false,
             CURLOPT_COOKIEJAR => 'cookie.txt',
             CURLOPT_COOKIEFILE => 'cookie.txt',
-            CURLOPT_REFERER => 'https://www.tiktok.com/',
+            CURLOPT_REFERER => 'www.tiktok.com',
             CURLOPT_CONNECTTIMEOUT => 30,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false,
@@ -212,5 +186,17 @@ class TiktokController extends AppBaseController
 
         Storage::disk('public')->put($filename, $data);
         return $filename;
+    }
+
+    public function downloadV2(Request $request){
+        $headers = [
+            'Host: www.tiktok.com',
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
+        ];
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $request->url, ['headers' => $headers, 'http_errors' => false]);
+        $JsonDecode = json_decode(Str::between($response->getBody()->getContents(), "window['SIGI_STATE']=", ";window['SIGI_RETRY']="), true);
+        return $JsonDecode();
     }
 }
