@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 class TiktokController extends AppBaseController
