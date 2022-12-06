@@ -90,6 +90,7 @@ class TiktokController extends AppBaseController
             CURLOPT_TIMEOUT => 30,
             CURLOPT_MAXREDIRS => 10,
         );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt_array($ch, $options);
         if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
