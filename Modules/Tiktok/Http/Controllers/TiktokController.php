@@ -133,7 +133,6 @@ class TiktokController extends AppBaseController
         }
         curl_close($ch);
         error_reporting(E_ALL);
-        dd(strval($data));
         return strval($data);
     }
 
