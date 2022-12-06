@@ -78,7 +78,7 @@ class TiktokController extends AppBaseController
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => false,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.9) Gecko/20100508 SeaMonkey/2.0.4',
             CURLOPT_ENCODING => "utf-8",
             CURLOPT_AUTOREFERER => false,
             CURLOPT_COOKIEJAR => 'cookie.txt',
@@ -91,6 +91,7 @@ class TiktokController extends AppBaseController
             CURLOPT_MAXREDIRS => 10,
         );
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
         curl_setopt_array($ch, $options);
         if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
