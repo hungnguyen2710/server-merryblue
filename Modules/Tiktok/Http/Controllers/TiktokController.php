@@ -102,6 +102,7 @@ class TiktokController extends AppBaseController
             return curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         }
         curl_close($ch);
+        error_reporting(E_ALL);
         return strval($data);
     }
 
