@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "nwidart/laravel-modules": "^9.0",
+        "ssovit/tiktok-api": "^2.0",
         "stichoza/google-translate-php": "^4.1",
         "symfony/finder": "6.1",
         "symfony/http-client": "^6.2"
