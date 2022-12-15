@@ -3,12 +3,14 @@
 namespace Modules\Tiktok\Http\Controllers;
 
 use App\Http\Controllers\AppBaseController;
+use App\Models\TikTok;
 use DateTime;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -23,7 +25,7 @@ class TiktokController extends AppBaseController
     {
         $request->validate([
             'url' => 'required'
-            ]);
+        ]);
 
 //        $headers = [
 //            'sec-fetch-user' => '?1',
@@ -91,17 +93,18 @@ class TiktokController extends AppBaseController
             'url' => $request->url,
             'token' => ''
         ];
-        $response = Http::withHeaders([
-            'Accept'       => 'application/json',
-            'content-type' => 'application/json',
-        ])
-            ->post('https://ssyoutube.com/api/convert', $dataSend)->json();
+        try {
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'content-type' => 'application/json',
+            ])
+                ->post('https://ssyoutube.com/api/convert', $dataSend)->json();
 
-        $dataOutput = [];
+            $dataOutput = [];
             $dataOutput['links'] = [];
             $uuid = Uuid::uuid4()->toString();
             $dataOutput['title'] = $uuid;
-            $dataOutput['thumbnail'] =  $response['thumb'] ? $response['thumb'] : '';
+            $dataOutput['thumbnail'] = $response['thumb'] ? $response['thumb'] : '';
             $dataOutput['links'][] = [
                 "url" => $response['url'][0] ? $response['url'][0]['url'] : '',
                 "format" => 'hd',
@@ -111,7 +114,36 @@ class TiktokController extends AppBaseController
 
 
             $dataOutput['time'] = '';
-            return $this->responseAPI(true, '', $dataOutput, 200);
+            if (isset($dataOutput['links'][0]['url']) || $dataOutput['links'][0]['url'] != '') {
+                $dataInput = [
+                    'url' => $request->url,
+                    'version' => 'v1',
+                    'api' => 'crawl',
+                    'status' => 1,
+                ];
+                TikTok::create($dataInput);
+                return $this->responseAPI(true, '', $dataOutput, 200);
+            } else {
+                $dataInput = [
+                    'url' => $request->url,
+                    'version' => 'v1',
+                    'api' => 'crawl',
+                    'status' => 0,
+                ];
+                TikTok::create($dataInput);
+                return $this->responseAPI(false, '', null, 400);
+            }
+        } catch (Exception $e) {
+            $dataInput = [
+                'url' => $request->url,
+                'version' => 'v1',
+                'api' => 'general',
+                'status' => 0,
+            ];
+            TikTok::create($dataInput);
+            return $this->responseAPI(false, '', null, 400);
+        }
+
     }
 
 
@@ -247,7 +279,8 @@ class TiktokController extends AppBaseController
         return $filename;
     }
 
-    public function downloadV2(Request $request){
+    public function downloadV2(Request $request)
+    {
         $headers = [
             'Host: www.tiktok.com',
             'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
