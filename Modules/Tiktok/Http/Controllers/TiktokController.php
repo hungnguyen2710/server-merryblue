@@ -116,32 +116,32 @@ class TiktokController extends AppBaseController
 
             $dataOutput['time'] = '';
             if (isset($dataOutput['links'][0]['url']) || $dataOutput['links'][0]['url'] != '') {
-//                $dataInput = [
-//                    'url' => $request->url,
-//                    'version' => 'v1',
-//                    'api' => 'crawl',
-//                    'status' => 1,
-//                ];
-//                TikTok::create($dataInput);
+                $dataInput = [
+                    'url' => $request->url,
+                    'version' => 'v1',
+                    'api' => 'crawl',
+                    'status' => 1,
+                ];
+                TikTok::create($dataInput);
                 return $this->responseAPI(true, '', $dataOutput, 200);
             } else {
-//                $dataInput = [
-//                    'url' => $request->url,
-//                    'version' => 'v1',
-//                    'api' => 'crawl',
-//                    'status' => 0,
-//                ];
-//                TikTok::create($dataInput);
+                $dataInput = [
+                    'url' => $request->url,
+                    'version' => 'v1',
+                    'api' => 'crawl',
+                    'status' => 0,
+                ];
+                TikTok::create($dataInput);
                 return $this->responseAPI(false, '', null, 400);
             }
         } catch (Exception $e) {
-//            $dataInput = [
-//                'url' => $request->url,
-//                'version' => 'v1',
-//                'api' => 'general',
-//                'status' => 0,
-//            ];
-//            TikTok::create($dataInput);
+            $dataInput = [
+                'url' => $request->url,
+                'version' => 'v1',
+                'api' => 'general',
+                'status' => 0,
+            ];
+            TikTok::create($dataInput);
             return $this->responseAPI(false, '', null, 400);
         }
 
