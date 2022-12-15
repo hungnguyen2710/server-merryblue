@@ -20,6 +20,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'tiktok'], function () {
         Route::get('/link', [TiktokController::class, 'index']);
         Route::get('/down', [TiktokController::class, 'downloadVideo']);
+        Route::get('/link-2', [TiktokController::class, 'tiktok']);
     });
 
 });

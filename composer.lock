@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01934660f5027795a7792f4642ba9a6a",
+    "content-hash": "60b08f12fda0ff768a9cbde46e8ecdc2",
     "packages": [
         {
             "name": "brick/math",
@@ -2914,6 +2914,52 @@
                 }
             ],
             "time": "2022-11-05T23:03:38+00:00"
+        },
+        {
+            "name": "ssovit/tiktok-api",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ssovit/TikTok-API-PHP.git",
+                "reference": "c3ef9472e678becd74bf26d5c02d2d74f4c654bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ssovit/TikTok-API-PHP/zipball/c3ef9472e678becd74bf26d5c02d2d74f4c654bd",
+                "reference": "c3ef9472e678becd74bf26d5c02d2d74f4c654bd",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sovit\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sovit Tamrakar",
+                    "email": "sovit.tamrakar@gmail.com",
+                    "homepage": "https://github.com/ssovit/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Unofficial TikTok API for PHP",
+            "homepage": "https://github.com/ssovit/TikTok-API-PHP",
+            "keywords": [
+                "TikTok ",
+                "tiktok-api",
+                "tiktok-scraper"
+            ],
+            "support": {
+                "email": "sovit.tamrakar@gmail.com",
+                "issues": "https://github.com/ssovit/TikTok-API-PHP/issues",
+                "source": "https://github.com/ssovit/TikTok-API-PHP"
+            },
+            "time": "2022-02-15T13:10:56+00:00"
         },
         {
             "name": "stichoza/google-translate-php",
