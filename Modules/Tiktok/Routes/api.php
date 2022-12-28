@@ -21,6 +21,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/link', [TiktokController::class, 'index']);
         Route::get('/down', [TiktokController::class, 'downloadVideo']);
         Route::get('/link-2', [TiktokController::class, 'tiktok']);
+        Route::get('/list-log', [TiktokController::class, 'listLog']);
+        Route::get('/chart-today', [TiktokController::class, 'chartByToday']);
+        Route::get('/req-month', [TiktokController::class, 'reqByMonth']);
     });
 
 });
