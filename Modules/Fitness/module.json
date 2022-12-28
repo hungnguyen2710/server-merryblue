@@ -1,0 +1,11 @@
+{
+    "name": "Fitness",
+    "alias": "fitness",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Fitness\\Providers\\FitnessServiceProvider"
+    ],
+    "files": []
+}
