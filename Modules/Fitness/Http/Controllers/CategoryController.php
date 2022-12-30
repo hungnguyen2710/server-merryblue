@@ -33,6 +33,7 @@ class CategoryController extends AppBaseController
             'title' => $request->title,
             'icon' => $icon_path,
             'thumbnail' => $thumbnail_path,
+            'sort_order' => $request->sort_order,
             'type' => $request->type,
         ];
 
