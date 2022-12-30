@@ -27,4 +27,11 @@ class FitnessCategory extends Model
             get: fn ($value) => config('app.storage_url') . $value ,
         );
     }
+
+    protected function icon(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => config('app.storage_url') . $value ,
+        );
+    }
 }
