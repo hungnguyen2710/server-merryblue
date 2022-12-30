@@ -30,7 +30,7 @@ class FitnessExercise extends Model
         );
     }
 
-    protected function image_action(): Attribute
+    protected function imageAction(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => config('app.storage_url') . $value ,
