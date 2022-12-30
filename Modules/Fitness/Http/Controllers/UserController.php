@@ -5,6 +5,7 @@ namespace Modules\Fitness\Http\Controllers;
 use App\Http\Controllers\AppBaseController;
 use App\Models\FitnessCategory;
 use App\Models\FitnessUser;
+use App\Models\FitnessUserCategory;
 use App\Models\FitnessUserInfo;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class UserController extends AppBaseController
     public function createUser(Request $request){
         $request->validate([
            'name' => 'required',
+           'gender' => 'required',
            'categories' => 'required',
         ]);
 
@@ -44,7 +46,7 @@ class UserController extends AppBaseController
                           'fitness_category_id'  => $value,
                         ];
 
-                        FitnessCategory::create($userCategoryInput);
+                        FitnessUserCategory::create($userCategoryInput);
                     }
                 }
             }
