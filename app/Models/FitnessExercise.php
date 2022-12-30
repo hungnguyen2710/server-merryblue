@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,4 +22,18 @@ class FitnessExercise extends Model
         'description' ,
         'status' ,
     ];
+
+    protected function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => config('app.storage_url') . $value ,
+        );
+    }
+
+    protected function image_action(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => config('app.storage_url') . $value ,
+        );
+    }
 }
