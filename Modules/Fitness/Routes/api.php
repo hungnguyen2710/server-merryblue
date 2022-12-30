@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
+use Modules\Fitness\Http\Controllers\LanguageController;
+use Modules\Fitness\Http\Controllers\CategoryController;
+use Modules\Fitness\Http\Controllers\ExerciseController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +16,23 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/fitness', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1'], function () {
+
+    Route::group(['prefix' => 'fitness'], function () {
+        Route::group(['prefix' => 'language'], function () {
+            Route::get('/list', [LanguageController::class, 'listLanguage']);
+            Route::post('/create', [LanguageController::class, 'createLanguage']);
+        });
+
+        Route::group(['prefix' => 'category'], function () {
+            Route::get('/list', [CategoryController::class, 'listCategory']);
+            Route::post('/create', [CategoryController::class, 'createCategory']);
+        });
+
+        Route::group(['prefix' => 'exercise'], function () {
+            Route::get('/list/{categoryId}', [ExerciseController::class, 'listExercise']);
+            Route::post('/create', [ExerciseController::class, 'createExercise']);
+        });
+    });
+
 });
