@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Fitness\Http\Controllers\LanguageController;
 use Modules\Fitness\Http\Controllers\CategoryController;
 use Modules\Fitness\Http\Controllers\ExerciseController;
+use Modules\Fitness\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,6 +33,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'exercise'], function () {
             Route::get('/list/{categoryId}', [ExerciseController::class, 'listExercise']);
             Route::post('/create', [ExerciseController::class, 'createExercise']);
+        });
+
+        Route::group(['prefix' => 'user'], function () {
+            Route::get('/me', [UserController::class, 'me']);
+            Route::post('/create', [UserController::class, 'createUser']);
         });
     });
 
