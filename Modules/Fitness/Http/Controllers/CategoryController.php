@@ -59,9 +59,9 @@ class CategoryController extends AppBaseController
 
         $user = FitnessUser::where('name', $request->name)->first();
         if ($user){
-            $userExercise = FitnessUserCategory::where('fitness_user_id',$user->id)->all()->pluck('fitness_exercise_id');
-            $exercise = FitnessExercise::whereIn('id',$userExercise)->get();
-            return $this->responseAPI(true, '', $exercise, 200);
+            $userCategory = FitnessUserCategory::where('fitness_user_id',$user->id)->get()->pluck('fitness_category_id')->toArray();
+            $category = FitnessCategory::whereIn('id',$userCategory)->get();
+            return $this->responseAPI(true, '', $category, 200);
         }else{
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }

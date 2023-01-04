@@ -4,6 +4,7 @@ namespace Modules\Fitness\Http\Controllers;
 
 use App\Http\Controllers\AppBaseController;
 use App\Models\FitnessCategory;
+use App\Models\FitnessExercise;
 use App\Models\FitnessUser;
 use App\Models\FitnessUserCategory;
 use App\Models\FitnessUserHistory;
@@ -96,9 +97,9 @@ class UserController extends AppBaseController
 
         $user = FitnessUser::where('name', $request->name)->first();
         if ($user){
-            $userCategory = FitnessUserHistory::where('fitness_user_id',$user->id)->all()->pluck('fitness_category_id');
-            $category = FitnessCategory::whereIn('id',$userCategory)->get();
-            return $this->responseAPI(true, '', $category, 200);
+            $userExercise = FitnessUserHistory::where('fitness_user_id',$user->id)->get()->pluck('fitness_exercise_id');
+            $exercise = FitnessExercise::whereIn('id',$userExercise)->get();
+            return $this->responseAPI(true, '', $exercise, 200);
         }else{
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
