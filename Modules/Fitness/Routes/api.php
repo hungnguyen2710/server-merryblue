@@ -27,6 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'category'], function () {
             Route::get('/list', [CategoryController::class, 'listCategory']);
+            Route::get('/list-by-user', [CategoryController::class, 'listCategoryByUser']);
             Route::post('/create', [CategoryController::class, 'createCategory']);
         });
 
@@ -38,6 +39,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'user'], function () {
             Route::get('/me', [UserController::class, 'me']);
             Route::post('/create', [UserController::class, 'createUser']);
+            Route::post('/add-history', [UserController::class, 'addToHistory']);
+            Route::get('/list-history', [UserController::class, 'listHistory']);
         });
     });
 

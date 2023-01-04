@@ -4,6 +4,9 @@ namespace Modules\Fitness\Http\Controllers;
 
 use App\Http\Controllers\AppBaseController;
 use App\Models\FitnessCategory;
+use App\Models\FitnessExercise;
+use App\Models\FitnessUser;
+use App\Models\FitnessUserCategory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -46,4 +49,23 @@ class CategoryController extends AppBaseController
         $category = FitnessCategory::all();
         return $this->responseAPI(true, '', $category, 200);
     }
+
+    public function listCategoryByUser(Request $request){
+        $request->validate(
+          [
+              'name' => 'required'
+          ]
+        );
+
+        $user = FitnessUser::where('name', $request->name)->first();
+        if ($user){
+            $userExercise = FitnessUserCategory::where('fitness_user_id',$user->id)->all()->pluck('fitness_exercise_id');
+            $exercise = FitnessExercise::whereIn('id',$userExercise)->get();
+            return $this->responseAPI(true, '', $exercise, 200);
+        }else{
+            return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
+        }
+    }
+
+
 }
