@@ -19,6 +19,8 @@ class FitnessCategory extends Model
         'thumbnail' ,
         'type' ,
         'status' ,
+        'language_code',
+        'parent_id',
     ];
 
     protected function thumbnail(): Attribute

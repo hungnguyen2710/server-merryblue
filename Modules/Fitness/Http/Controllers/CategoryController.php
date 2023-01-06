@@ -10,6 +10,7 @@ use App\Models\FitnessUserCategory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class CategoryController extends AppBaseController
 {
@@ -44,25 +45,256 @@ class CategoryController extends AppBaseController
         return $this->responseAPI(true, '', $category, 200);
     }
 
-    public function listCategory()
+    public function listCategory(Request $request)
     {
-        $category = FitnessCategory::all();
+        $request->validate(
+            [
+                'language_code' => 'required'
+            ]
+        );
+        $language = $request->language_code;
+        $arrLanguage = ['af',
+            'sq',
+            'ar',
+            'hy',
+            'az',
+            'eu',
+            'be',
+            'bg',
+            'ca',
+            'zh-CN',
+            'zh-TW',
+            'hr',
+            'cs',
+            'da',
+            'nl',
+            'en',
+            'et',
+            'tl',
+            'fi',
+            'fr',
+            'gl',
+            'ka',
+            'de',
+            'el',
+            'ht',
+            'iw',
+            'hi',
+            'hu',
+            'is',
+            'id',
+            'ga',
+            'it',
+            'ja',
+            'ko',
+            'lv',
+            'lt',
+            'mk',
+            'ms',
+            'mt',
+            'no',
+            'fa',
+            'pl',
+            'pt',
+            'ro',
+            'ru',
+            'sr',
+            'sk',
+            'sl',
+            'es',
+            'sw',
+            'sv',
+            'th',
+            'tr',
+            'uk',
+            'ur',
+            'vi',
+            'cy',
+            'yi'];
+
+        $language = in_array($language, $arrLanguage) ? $language : 'en';
+
+
+            $category = FitnessCategory::when($language == 'en', function ($q){
+                $q->where('language_code', null)->orWhere('language_code','en');
+            })
+                ->when($language != 'en', function ($q) use ($language){
+                    $q->where('language_code', $language);
+                })
+                ->get();
+
+       if ($language != 'en'){
+           $categoryTemporary = FitnessCategory::where('language_code', null)->orWhere('language_code','en')->get();
+           $categoryDelete = FitnessCategory::where('language_code', $language)->get();
+           if ((count($categoryTemporary) > count($categoryDelete))){
+               if (count($categoryDelete) > 0){
+                   foreach ($categoryDelete as $value){
+                       $value->delete();
+                   }
+               }
+               $tr = new GoogleTranslate($language);
+               foreach ($categoryTemporary as $value){
+                   $dataInputTran = [
+                       'title' => $tr->translate($value->title),
+                       'icon' => $value->icon,
+                       'thumbnail' => $value->thumbnail,
+                       'sort_order' => $value->sort_order,
+                       'type' => $value->type,
+                       'language_code' => $language,
+                       'parent_id' => $value->id,
+                   ];
+                   FitnessCategory::create($dataInputTran);
+               }
+           }
+           $category = FitnessCategory::where('language_code', $language)->get();
+       }
         return $this->responseAPI(true, '', $category, 200);
     }
 
-    public function listCategoryByUser(Request $request){
+    public function listCategoryByUser(Request $request)
+    {
         $request->validate(
-          [
-              'name' => 'required'
-          ]
+            [
+                'name' => 'required',
+                'language_code' => 'required'
+            ]
         );
+        $language = $request->language_code;
+        $arrLanguage = ['af',
+            'sq',
+            'ar',
+            'hy',
+            'az',
+            'eu',
+            'be',
+            'bg',
+            'ca',
+            'zh-CN',
+            'zh-TW',
+            'hr',
+            'cs',
+            'da',
+            'nl',
+            'en',
+            'et',
+            'tl',
+            'fi',
+            'fr',
+            'gl',
+            'ka',
+            'de',
+            'el',
+            'ht',
+            'iw',
+            'hi',
+            'hu',
+            'is',
+            'id',
+            'ga',
+            'it',
+            'ja',
+            'ko',
+            'lv',
+            'lt',
+            'mk',
+            'ms',
+            'mt',
+            'no',
+            'fa',
+            'pl',
+            'pt',
+            'ro',
+            'ru',
+            'sr',
+            'sk',
+            'sl',
+            'es',
+            'sw',
+            'sv',
+            'th',
+            'tr',
+            'uk',
+            'ur',
+            'vi',
+            'cy',
+            'yi'];
+
+        $language = in_array($language, $arrLanguage) ? $language : 'en';
 
         $user = FitnessUser::where('name', $request->name)->first();
-        if ($user){
-            $userCategory = FitnessUserCategory::where('fitness_user_id',$user->id)->get()->pluck('fitness_category_id')->toArray();
-            $category = FitnessCategory::whereIn('id',$userCategory)->get();
-            return $this->responseAPI(true, '', $category, 200);
-        }else{
+        if ($user) {
+            if ($language == 'en'){
+                $userCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q){
+                    $q->where('language_code', null)->orWhere('language_code','en');
+                })->get()->pluck('fitness_category_id')->toArray();
+                $category = FitnessCategory::whereIn('id', $userCategory)
+                    ->get();
+                return $this->responseAPI(true, '', $category, 200);
+            }else{
+                $checkUserCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
+                    $q->where('language_code', $language);
+                })->get()->pluck('fitness_category_id')->toArray();
+
+                if (count($checkUserCategory) <= 0){
+
+                    $userCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q){
+                        $q->where('language_code', null)->orWhere('language_code','en');
+                    })->get()->pluck('fitness_category_id')->toArray();
+                    $checkCategory = FitnessCategory::whereIn('parent_id', $userCategory)->where('language_code',$language)
+                        ->get();
+
+                    if (count($checkCategory) <= 0){
+                        $category = FitnessCategory::whereIn('id', $userCategory)
+                            ->get();
+                        $tr = new GoogleTranslate($language);
+                        foreach ($category as $value){
+                            $dataInputTran = [
+                                'title' => $tr->translate($value->title),
+                                'icon' => $value->icon,
+                                'thumbnail' => $value->thumbnail,
+                                'sort_order' => $value->sort_order,
+                                'type' => $value->type,
+                                'language_code' => $language,
+                                'parent_id' => $value->id,
+                            ];
+                            FitnessCategory::create($dataInputTran);
+                        }
+
+                        $checkCategory2 = FitnessCategory::whereIn('parent_id', $userCategory)->where('language_code',$language)
+                            ->get();
+                        if (count($checkCategory2) > 0){
+
+                            foreach ($checkCategory2 as $value){
+                                $userCategoryInput2 = [
+                                    'fitness_user_id'  => $user->id,
+                                    'fitness_category_id'  => $value->id,
+                                    'language_code'  => $language,
+                                ];
+
+                                FitnessUserCategory::create($userCategoryInput2);
+                            }
+                            $checkUserCategory3 = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
+                                $q->where('language_code', $language);
+                            })->get()->pluck('fitness_category_id')->toArray();
+                            $category3 = FitnessCategory::whereIn('id', $checkUserCategory3)
+                                ->get();
+                            return $this->responseAPI(true, '', $category3, 200);
+                        }
+                    }else{
+
+                    }
+
+
+                }else{
+                    $checkUserCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
+                        $q->where('language_code', $language);
+                    })->get()->pluck('fitness_category_id')->toArray();
+                    $category = FitnessCategory::whereIn('id', $checkUserCategory)
+                        ->get();
+                    return $this->responseAPI(true, '', $category, 200);
+                }
+            }
+        } else {
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
     }

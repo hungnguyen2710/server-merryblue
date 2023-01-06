@@ -14,5 +14,6 @@ class FitnessUserCategory extends Model
     protected $fillable = [
         'fitness_user_id' ,
         'fitness_category_id' ,
+        'language_code' ,
     ];
 }
