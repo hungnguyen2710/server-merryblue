@@ -18,6 +18,10 @@ class CategoryController extends AppBaseController
     {
         $request->validate([
             'title' => 'required',
+            'description' => 'required',
+            'time' => 'required',
+            'total_workout' => 'required',
+            'calories' => 'required',
             'icon' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'thumbnail' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
@@ -35,6 +39,10 @@ class CategoryController extends AppBaseController
 
         $dataInput = [
             'title' => $request->title,
+            'description' => $request->description,
+            'time' => $request->time,
+            'total_workout' => $request->total_workout,
+            'calories' => $request->calories,
             'icon' => $icon_path,
             'thumbnail' => $thumbnail_path,
             'sort_order' => $request->sort_order,
@@ -136,6 +144,10 @@ class CategoryController extends AppBaseController
                foreach ($categoryTemporary as $value){
                    $dataInputTran = [
                        'title' => $tr->translate($value->title),
+                       'description' => $tr->translate($value->description),
+                       'time' => $value->time,
+                       'total_workout' => $value->total_workout,
+                       'calories' => $value->calories,
                        'icon' => $value->icon,
                        'thumbnail' => $value->thumbnail,
                        'sort_order' => $value->sort_order,
@@ -250,6 +262,10 @@ class CategoryController extends AppBaseController
                         foreach ($category as $value){
                             $dataInputTran = [
                                 'title' => $tr->translate($value->title),
+                                'description' => $tr->translate($value->description),
+                                'time' => $value->time,
+                                'total_workout' => $value->total_workout,
+                                'calories' => $value->calories,
                                 'icon' => $value->icon,
                                 'thumbnail' => $value->thumbnail,
                                 'sort_order' => $value->sort_order,
@@ -281,10 +297,22 @@ class CategoryController extends AppBaseController
                             return $this->responseAPI(true, '', $category3, 200);
                         }
                     }else{
+                        foreach ($checkCategory as $value){
+                            $userCategoryInput3 = [
+                                'fitness_user_id'  => $user->id,
+                                'fitness_category_id'  => $value->id,
+                                'language_code'  => $language,
+                            ];
 
+                            FitnessUserCategory::create($userCategoryInput3);
+                        }
+                        $checkUserCategory4 = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
+                            $q->where('language_code', $language);
+                        })->get()->pluck('fitness_category_id')->toArray();
+                        $category4 = FitnessCategory::whereIn('id', $checkUserCategory4)
+                            ->get();
+                        return $this->responseAPI(true, '', $category4, 200);
                     }
-
-
                 }else{
                     $checkUserCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
                         $q->where('language_code', $language);

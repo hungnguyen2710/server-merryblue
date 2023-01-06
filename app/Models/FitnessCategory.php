@@ -15,6 +15,10 @@ class FitnessCategory extends Model
     protected $fillable = [
         'sort_order' ,
         'title' ,
+        'description' ,
+        'time' ,
+        'total_workout' ,
+        'calories' ,
         'icon' ,
         'thumbnail' ,
         'type' ,

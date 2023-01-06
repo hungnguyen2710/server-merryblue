@@ -16,11 +16,15 @@ class FitnessExercise extends Model
         'fitness_category_id' ,
         'title' ,
         'time' ,
+        'number_of_reps' ,
+        'rest_time' ,
+        'tips' ,
         'calories' ,
         'thumbnail' ,
         'image_action' ,
         'description' ,
         'status' ,
+        'language_code' ,
     ];
 
     protected function thumbnail(): Attribute
