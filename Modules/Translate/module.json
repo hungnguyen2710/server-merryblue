@@ -1,0 +1,11 @@
+{
+    "name": "Translate",
+    "alias": "translate",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Translate\\Providers\\TranslateServiceProvider"
+    ],
+    "files": []
+}
