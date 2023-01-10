@@ -22,8 +22,8 @@ class ExerciseController extends AppBaseController
             'number_of_reps' => 'required',
             'rest_time' => 'required',
             'tips' => 'required',
-            'image_action' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'thumbnail' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image_action' => 'image|mimes:jpg,png,jpeg,gif,svg',
+            'thumbnail' => 'image|mimes:jpg,png,jpeg,gif,svg',
         ]);
 
         if ($request->hasFile('image_action')) {
