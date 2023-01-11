@@ -2,78 +2,40 @@
 
 namespace Modules\FakeMessage\Http\Controllers;
 
+use App\Http\Controllers\AppBaseController;
+use App\Models\FakeMessageCelebrity;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class FakeMessageController extends Controller
+class FakeMessageController extends AppBaseController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('fakemessage::index');
+    public function createCelebrity(Request $request){
+        $request->validate([
+            'name' => 'required',
+            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $avatar_path = $avatar->store('images/avatar', ['disk' => 'public']);
+        }
+
+        $dataInput = [
+            'name' => $request->name,
+            'avatar' => $avatar_path,
+            'followers' => $request->followers,
+            'language_code' => $request->language_code,
+        ];
+
+        $celebrity = FakeMessageCelebrity::create($dataInput);
+
+        return $this->responseAPI(true,'', $celebrity, 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('fakemessage::create');
-    }
+    public function listCelebrity(){
+        $celebrity = FakeMessageCelebrity::orderBy('created_at','DESC')->get();
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('fakemessage::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('fakemessage::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->responseAPI(true,'', $celebrity, 200);
     }
 }

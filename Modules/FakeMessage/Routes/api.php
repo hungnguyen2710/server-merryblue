@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
+use Modules\FakeMessage\Http\Controllers\FakeMessageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +14,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/fakemessage', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1'], function () {
+
+    Route::group(['prefix' => 'fake-message'], function () {
+        Route::group(['prefix' => 'celebrity'], function () {
+            Route::get('/list', [FakeMessageController::class, 'listCelebrity']);
+            Route::post('/create', [FakeMessageController::class, 'createCelebrity']);
+        });
+
+    });
+
 });
