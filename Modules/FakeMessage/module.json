@@ -1,0 +1,11 @@
+{
+    "name": "FakeMessage",
+    "alias": "fakemessage",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FakeMessage\\Providers\\FakeMessageServiceProvider"
+    ],
+    "files": []
+}

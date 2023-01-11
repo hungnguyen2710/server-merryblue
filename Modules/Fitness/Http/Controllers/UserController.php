@@ -97,9 +97,17 @@ class UserController extends AppBaseController
 
         $user = FitnessUser::where('name', $request->name)->first();
         if ($user){
-            $userExercise = FitnessUserHistory::where('fitness_user_id',$user->id)->get()->pluck('fitness_exercise_id');
-            $exercise = FitnessExercise::whereIn('id',$userExercise)->get();
-            return $this->responseAPI(true, '', $exercise, 200);
+            $userExercise = FitnessUserHistory::where('fitness_user_id',$user->id)->get();
+
+            $ex = [];
+
+            foreach ($userExercise  as $key => $value){
+                $data = FitnessExercise::where('id',$value->fitness_exercise_id)->first();
+                $data['history_time'] = $value->created_at;
+                $ex[$key] = $data;
+            }
+
+            return $this->responseAPI(true, '', $ex, 200);
         }else{
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
