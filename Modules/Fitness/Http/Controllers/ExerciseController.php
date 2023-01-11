@@ -130,7 +130,7 @@ class ExerciseController extends AppBaseController
                 ->orderBy('created_at', 'DESC')->get();
             return $this->responseAPI(true, '', $exercise, 200);
         }else{
-            $exercise = FitnessExercise::where('fitness_category_id', $categoryId)->get();
+            $exercise = FitnessExercise::where('fitness_category_id', $categoryId)->where('language_code', $language)->get();
             if (count($exercise) <= 0){
                 $categoryCheck = FitnessCategory::where('id',$categoryId)->first();
                 $exerciseByParent = FitnessExercise::where('fitness_category_id', $categoryCheck->parent_id)->get();
