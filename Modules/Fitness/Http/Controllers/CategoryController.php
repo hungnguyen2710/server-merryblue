@@ -160,8 +160,8 @@ class CategoryController extends AppBaseController
            }
            $category = FitnessCategory::where('language_code', $language)->get();
            $category->map(function ($item){
-               $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->thumbnail);
-               $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->icon);
+               $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+               $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
            });
        }
         return $this->responseAPI(true, '', $category, 200);
@@ -299,8 +299,8 @@ class CategoryController extends AppBaseController
                             $category3 = FitnessCategory::whereIn('id', $checkUserCategory3)
                                 ->get();
                             $category3->map(function ($item){
-                                $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->thumbnail);
-                                $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->icon);
+                                $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                                $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
                             });
                             return $this->responseAPI(true, '', $category3, 200);
                         }
@@ -320,8 +320,8 @@ class CategoryController extends AppBaseController
                         $category4 = FitnessCategory::whereIn('id', $checkUserCategory4)
                             ->get();
                         $category4->map(function ($item){
-                            $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->thumbnail);
-                            $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->icon);
+                            $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                            $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
                         });
                         return $this->responseAPI(true, '', $category4, 200);
                     }
@@ -332,8 +332,8 @@ class CategoryController extends AppBaseController
                     $category = FitnessCategory::whereIn('id', $checkUserCategory)
                         ->get();
                     $category->map(function ($item){
-                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->thumbnail);
-                        $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),config('app.storage_url'),$item->icon);
+                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                        $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
                     });
                     return $this->responseAPI(true, '', $category, 200);
                 }
