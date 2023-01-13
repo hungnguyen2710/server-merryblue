@@ -154,6 +154,10 @@ class ExerciseController extends AppBaseController
                         FitnessExercise::create($dataInput);
                     }
                     $exerciseByCategory = FitnessExercise::where('fitness_category_id', $categoryId)->get();
+                    $exerciseByCategory->map(function ($item){
+                        $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
+                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                    });
                     return $this->responseAPI(true, '', $exerciseByCategory, 200);
                 }
             }else{
@@ -183,6 +187,10 @@ class ExerciseController extends AppBaseController
                             FitnessExercise::create($dataInput);
                         }
                         $exerciseByCategory = FitnessExercise::where('fitness_category_id', $categoryId)->get();
+                        $exerciseByCategory->map(function ($item){
+                            $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
+                            $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                        });
                         return $this->responseAPI(true, '', $exerciseByCategory, 200);
                     }
                 }else{
