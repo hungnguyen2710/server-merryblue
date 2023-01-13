@@ -196,6 +196,11 @@ class ExerciseController extends AppBaseController
                         return $this->responseAPI(true, '', $exerciseByCategory, 200);
                     }
                 }else{
+                    $exercise->map(function ($item){
+                        $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
+                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                        return $item;
+                    });
                     return $this->responseAPI(true, '', $exercise, 200);
                 }
             }
