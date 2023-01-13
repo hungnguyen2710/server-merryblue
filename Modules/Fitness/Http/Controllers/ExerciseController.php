@@ -157,6 +157,7 @@ class ExerciseController extends AppBaseController
                     $exerciseByCategory->map(function ($item){
                         $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
                         $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                        return $item;
                     });
                     return $this->responseAPI(true, '', $exerciseByCategory, 200);
                 }
@@ -190,6 +191,7 @@ class ExerciseController extends AppBaseController
                         $exerciseByCategory->map(function ($item){
                             $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
                             $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                            return $item;
                         });
                         return $this->responseAPI(true, '', $exerciseByCategory, 200);
                     }
