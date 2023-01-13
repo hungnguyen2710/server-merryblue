@@ -349,7 +349,8 @@ class CategoryController extends AppBaseController
             'icon' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'thumbnail' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
-
+        $icon_path = '';
+        $thumbnail_path = '';
         if ($request->hasFile('icon')) {
             $icon = $request->file('icon');
             $icon_path = $icon->store('icon/i', ['disk' => 'public']);
