@@ -343,5 +343,34 @@ class CategoryController extends AppBaseController
         }
     }
 
+    public function updateThumbnail(Request $request){
+        $request->validate([
+            'category_id' => 'required',
+            'icon' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'thumbnail' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('icon')) {
+            $icon = $request->file('icon');
+            $icon_path = $icon->store('icon/i', ['disk' => 'public']);
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            $thumbnail = $request->file('thumbnail');
+            $thumbnail_path = $thumbnail->store('image/thumbnail', ['disk' => 'public']);
+        }
+
+        $category = FitnessCategory::where('id',$request->category_id)->first();
+        if ($category){
+            $dataInput = [
+              'thumbnail' => $thumbnail_path ? $thumbnail_path : $category->thumbnail,
+              'icon' => $icon_path ? $icon_path : $category->icon,
+            ];
+            $category->update($dataInput);
+            return $this->responseAPI(true, '', $category, 200);
+        }else{
+            return $this->responseAPI(false, 'Category khong ton tai', null, 400);
+        }
+    }
 
 }
