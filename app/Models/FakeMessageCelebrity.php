@@ -15,6 +15,7 @@ class FakeMessageCelebrity extends Model
     protected $fillable = [
       'name',
       'avatar',
+      'video',
       'followers',
       'language_code',
     ];

@@ -14,6 +14,7 @@ class FakeMessageController extends AppBaseController
         $request->validate([
             'name' => 'required',
             'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -21,9 +22,15 @@ class FakeMessageController extends AppBaseController
             $avatar_path = $avatar->store('images/avatar', ['disk' => 'public']);
         }
 
+        if ($request->hasFile('video')) {
+            $video= $request->file('video');
+            $video_path = $video->store('images/video', ['disk' => 'public']);
+        }
+
         $dataInput = [
             'name' => $request->name,
-            'avatar' => $avatar_path,
+            'avatar' => $video_path,
+            'video' => $avatar_path,
             'followers' => $request->followers,
             'language_code' => $request->language_code,
         ];
