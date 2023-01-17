@@ -26,4 +26,11 @@ class FakeMessageCelebrity extends Model
             get: fn ($value) => config('app.storage_url') . $value ,
         );
     }
+
+    protected function video(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => config('app.storage_url') . $value ,
+        );
+    }
 }
