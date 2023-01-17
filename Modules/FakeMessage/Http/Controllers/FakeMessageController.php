@@ -29,8 +29,8 @@ class FakeMessageController extends AppBaseController
 
         $dataInput = [
             'name' => $request->name,
-            'avatar' => $video_path,
-            'video' => $avatar_path,
+            'video' => $video_path,
+            'avatar' => $avatar_path,
             'followers' => $request->followers,
             'language_code' => $request->language_code,
         ];
