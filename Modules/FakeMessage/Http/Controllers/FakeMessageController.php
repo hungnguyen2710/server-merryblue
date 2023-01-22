@@ -13,8 +13,8 @@ class FakeMessageController extends AppBaseController
     public function createCelebrity(Request $request){
         $request->validate([
             'name' => 'required',
-            'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
+            'avatar' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'video' => 'required|mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
         ]);
 
         if ($request->hasFile('avatar')) {
