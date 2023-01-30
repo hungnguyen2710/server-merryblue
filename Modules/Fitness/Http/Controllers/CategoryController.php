@@ -131,6 +131,11 @@ class CategoryController extends AppBaseController
                 })
                 ->get();
 
+        $category->map(function ($item){
+            $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+            $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
+        });
+
        if ($language != 'en'){
            $categoryTemporary = FitnessCategory::where('language_code', null)->orWhere('language_code','en')->get();
            $categoryDelete = FitnessCategory::where('language_code', $language)->get();
