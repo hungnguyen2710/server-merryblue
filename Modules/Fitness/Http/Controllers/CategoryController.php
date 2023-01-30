@@ -332,8 +332,9 @@ class CategoryController extends AppBaseController
                     $category = FitnessCategory::whereIn('id', $checkUserCategory)
                         ->get();
                     $category->map(function ($item){
-                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
-                        $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
+                        $item['thumbnail']= str_replace(config('app.storage_url'),'',$item->thumbnail);
+                        $item['icon']= str_replace(config('app.storage_url'),'',$item->icon);
+                        return $item;
                     });
                     return $this->responseAPI(true, '', $category, 200);
                 }
