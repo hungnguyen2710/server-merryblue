@@ -12,6 +12,7 @@ use App\Models\FitnessUserInfo;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends AppBaseController
@@ -111,5 +112,13 @@ class UserController extends AppBaseController
         }else{
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
+    }
+
+    public function countUser(){
+        $dataOutput = [];
+        $dataOutput['today'] = FitnessUser::where('created_at', '>=', Carbon::today()->toDateString())->count();
+        $dataOutput['week'] = FitnessUser::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+        $dataOutput['month'] = FitnessUser::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+        return $this->responseAPI(true, '', $dataOutput, 200);
     }
 }
