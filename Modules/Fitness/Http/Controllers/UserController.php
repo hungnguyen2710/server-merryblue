@@ -5,6 +5,7 @@ namespace Modules\Fitness\Http\Controllers;
 use App\Http\Controllers\AppBaseController;
 use App\Models\FitnessCategory;
 use App\Models\FitnessExercise;
+use App\Models\FitnessLogs;
 use App\Models\FitnessRating;
 use App\Models\FitnessUser;
 use App\Models\FitnessUserCategory;
@@ -18,23 +19,24 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends AppBaseController
 {
-    public function createUser(Request $request){
+    public function createUser(Request $request)
+    {
         $request->validate([
-           'name' => 'required',
-           'gender' => 'required',
-           'categories' => 'required',
+            'name' => 'required',
+            'gender' => 'required',
+            'categories' => 'required',
         ]);
 
         try {
             DB::beginTransaction();
 
             $dataInput = [
-              'name' => $request->name,
+                'name' => $request->name,
             ];
             $user = FitnessUser::create($dataInput);
 
 
-            if ($user){
+            if ($user) {
                 $userInfoInput = [
                     'fitness_user_id' => $user->id,
                     'gender' => $request->gender,
@@ -43,11 +45,11 @@ class UserController extends AppBaseController
                 ];
                 FitnessUserInfo::create($userInfoInput);
 
-                if (count($request->categories) > 0){
-                    foreach ($request->categories as $value){
+                if (count($request->categories) > 0) {
+                    foreach ($request->categories as $value) {
                         $userCategoryInput = [
-                          'fitness_user_id'  => $user->id,
-                          'fitness_category_id'  => $value,
+                            'fitness_user_id' => $user->id,
+                            'fitness_category_id' => $value,
                         ];
 
                         FitnessUserCategory::create($userCategoryInput);
@@ -56,41 +58,44 @@ class UserController extends AppBaseController
             }
 
             DB::commit();
-            return $this->responseAPI(true,'', $user, 200);
-        }catch (\Exception $e){
+            return $this->responseAPI(true, '', $user, 200);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return $this->responseAPI(false,'', null, 400);
+            return $this->responseAPI(false, '', null, 400);
         }
     }
 
-    public function me(Request $request){
+    public function me(Request $request)
+    {
         $request->validate([
             'name' => 'required',
         ]);
 
         $user = FitnessUser::where('name', $request->name)->first();
-        return $this->responseAPI(true,'', $user, 200);
+        return $this->responseAPI(true, '', $user, 200);
     }
 
-    public function addToHistory(Request $request){
+    public function addToHistory(Request $request)
+    {
         $request->validate([
             'name' => 'required',
             'fitness_exercise_id' => 'required',
         ]);
         $user = FitnessUser::where('name', $request->name)->first();
-        if ($user){
+        if ($user) {
             $dataInput = [
-              'fitness_user_id'  => $user->id,
-              'fitness_exercise_id'  => $request->fitness_exercise_id,
+                'fitness_user_id' => $user->id,
+                'fitness_exercise_id' => $request->fitness_exercise_id,
             ];
             $history = FitnessUserHistory::create($dataInput);
             return $this->responseAPI(true, '', $history, 200);
-        }else{
+        } else {
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
     }
 
-    public function listHistory(Request $request){
+    public function listHistory(Request $request)
+    {
         $request->validate(
             [
                 'name' => 'required'
@@ -98,24 +103,25 @@ class UserController extends AppBaseController
         );
 
         $user = FitnessUser::where('name', $request->name)->first();
-        if ($user){
-            $userExercise = FitnessUserHistory::where('fitness_user_id',$user->id)->get();
+        if ($user) {
+            $userExercise = FitnessUserHistory::where('fitness_user_id', $user->id)->get();
 
             $ex = [];
 
-            foreach ($userExercise  as $key => $value){
-                $data = FitnessExercise::where('id',$value->fitness_exercise_id)->first();
+            foreach ($userExercise as $key => $value) {
+                $data = FitnessExercise::where('id', $value->fitness_exercise_id)->first();
                 $data['history_time'] = $value->created_at;
                 $ex[$key] = $data;
             }
 
             return $this->responseAPI(true, '', $ex, 200);
-        }else{
+        } else {
             return $this->responseAPI(false, 'Người dùng không tồn tại', null, 400);
         }
     }
 
-    public function countUser(){
+    public function countUser()
+    {
         $dataOutput = [];
         $dataOutput['today'] = FitnessUser::where('created_at', '>=', Carbon::today()->toDateString())->count();
         $dataOutput['week'] = FitnessUser::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
@@ -123,16 +129,17 @@ class UserController extends AppBaseController
         return $this->responseAPI(true, '', $dataOutput, 200);
     }
 
-    public function createRating(Request $request){
+    public function createRating(Request $request)
+    {
         $request->validate([
-           'fitness_user_id' => 'required',
-           'star' => 'required',
+            'fitness_user_id' => 'required',
+            'star' => 'required',
         ]);
 
         $dataInput = [
-          'fitness_user_id'  => $request->fitness_user_id,
-          'star'  => $request->star,
-          'comment'  => $request->comment,
+            'fitness_user_id' => $request->fitness_user_id,
+            'star' => $request->star,
+            'comment' => $request->comment,
         ];
 
         $rate = FitnessRating::create($dataInput);
@@ -140,8 +147,29 @@ class UserController extends AppBaseController
         return $this->responseAPI(true, '', $rate, 200);
     }
 
-    public function listRating(){
-        $rating = FitnessRating::orderBy('created_at','DESC')->paginate(100);
+    public function listRating()
+    {
+        $rating = FitnessRating::orderBy('created_at', 'DESC')->paginate(100);
         return $this->responseAPI(true, '', $rating, 200);
+    }
+
+    public function createLog(Request $request)
+    {
+        $request->validate([
+            'fitness_user_id' => 'required',
+        ]);
+
+        $check = FitnessLogs::where('fitness_user_id', $request->fitness_user_id)->where('created_at', '>=', Carbon::today()->toDateString())->first();
+        if (!$check || $check == null) {
+            $dataInput = [
+                'fitness_user_id' => $request->fitness_user_id,
+                'day_count' => $check->day_count + 1,
+            ];
+
+            FitnessLogs::create($dataInput);
+            return $this->responseAPI(true, '', 'oke', 200);
+        } else {
+            return $this->responseAPI(false, 'Da ton tai', null, 400);
+        }
     }
 }

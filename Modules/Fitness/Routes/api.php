@@ -45,6 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/count-user', [UserController::class, 'countUser']);
             Route::post('/rating', [UserController::class, 'createRating']);
             Route::get('/rating-list', [UserController::class, 'listRating']);
+            Route::post('/create-log', [UserController::class, 'createLog']);
         });
     });
 
