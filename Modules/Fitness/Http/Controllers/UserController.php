@@ -5,6 +5,7 @@ namespace Modules\Fitness\Http\Controllers;
 use App\Http\Controllers\AppBaseController;
 use App\Models\FitnessCategory;
 use App\Models\FitnessExercise;
+use App\Models\FitnessRating;
 use App\Models\FitnessUser;
 use App\Models\FitnessUserCategory;
 use App\Models\FitnessUserHistory;
@@ -120,5 +121,22 @@ class UserController extends AppBaseController
         $dataOutput['week'] = FitnessUser::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
         $dataOutput['month'] = FitnessUser::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
         return $this->responseAPI(true, '', $dataOutput, 200);
+    }
+
+    public function createRating(Request $request){
+        $request->validate([
+           'fitness_user_id' => 'required',
+           'star' => 'required',
+        ]);
+
+        $dataInput = [
+          'fitness_user_id'  => $request->fitness_user_id,
+          'star'  => $request->star,
+          'comment'  => $request->comment,
+        ];
+
+        $rate = FitnessRating::create($dataInput);
+
+        return $this->responseAPI(true, '', $rate, 200);
     }
 }

@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/add-history', [UserController::class, 'addToHistory']);
             Route::get('/list-history', [UserController::class, 'listHistory']);
             Route::get('/count-user', [UserController::class, 'countUser']);
+            Route::post('/rating', [UserController::class, 'createRating']);
         });
     });
 
