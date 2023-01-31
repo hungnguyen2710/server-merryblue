@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/list-history', [UserController::class, 'listHistory']);
             Route::get('/count-user', [UserController::class, 'countUser']);
             Route::post('/rating', [UserController::class, 'createRating']);
+            Route::get('/rating-list', [UserController::class, 'listRating']);
         });
     });
 

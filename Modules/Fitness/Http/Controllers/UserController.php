@@ -139,4 +139,9 @@ class UserController extends AppBaseController
 
         return $this->responseAPI(true, '', $rate, 200);
     }
+
+    public function listRating(){
+        $rating = FitnessRating::orderBy('created_at','DESC')->paginate(100);
+        return $this->responseAPI(true, '', $rating, 200);
+    }
 }
