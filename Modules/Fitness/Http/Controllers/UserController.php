@@ -163,7 +163,7 @@ class UserController extends AppBaseController
         if (!$check || $check == null) {
             $dataInput = [
                 'fitness_user_id' => $request->fitness_user_id,
-                'day_count' => $check->day_count + 1,
+                'day_count' => ($check->day_count ? $check->day_count : 0) + 1,
             ];
 
             FitnessLogs::create($dataInput);
