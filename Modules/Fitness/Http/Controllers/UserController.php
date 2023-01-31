@@ -160,10 +160,11 @@ class UserController extends AppBaseController
         ]);
 
         $check = FitnessLogs::where('fitness_user_id', $request->fitness_user_id)->where('created_at', '>=', Carbon::today()->toDateString())->first();
+        $getData = FitnessLogs::where('fitness_user_id', $request->fitness_user_id)->orderBy('created_at', 'DESC')->first();
         if (!$check || $check == null) {
             $dataInput = [
                 'fitness_user_id' => $request->fitness_user_id,
-                'day_count' => ($check->day_count ? $check->day_count : 0) + 1,
+                'day_count' => (isset($getData->day_count) ? $getData->day_count : 0) + 1,
             ];
 
             FitnessLogs::create($dataInput);
