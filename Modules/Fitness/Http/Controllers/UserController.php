@@ -217,4 +217,17 @@ class UserController extends AppBaseController
         $user = FitnessUser::with(['exercise.detail'])->paginate(100);
         return $this->responseAPI(true, '', $user, 200);
     }
+
+    public function countUserExercise()
+    {
+        $dataOutput = [];
+        $dataOutput['today'] = FitnessUser::has('exercise')->where('created_at', '>=', Carbon::today()->toDateString())->count();
+        $dataOutput['week'] = FitnessUser::has('exercise')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+        $dataOutput['month'] = FitnessUser::has('exercise')->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+        $dataOutput['last_month'] = FitnessUser::has('exercise')->whereMonth(
+            'created_at', '=', Carbon::now()->subMonth()->month
+        )->count();
+        return $this->responseAPI(true, '', $dataOutput, 200);
+    }
+
 }

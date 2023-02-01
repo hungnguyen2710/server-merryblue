@@ -49,6 +49,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/chart-log', [UserController::class, 'chartLog']);
             Route::post('/exercise', [UserController::class, 'userExercise']);
             Route::get('/list', [UserController::class, 'listUser']);
+            Route::get('/count-user-exercise', [UserController::class, 'countUserExercise']);
         });
     });
 
