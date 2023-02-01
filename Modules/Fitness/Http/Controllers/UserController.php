@@ -178,12 +178,15 @@ class UserController extends AppBaseController
     }
 
     public function chartLog(){
-//        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->toArray();
-//        sort($arrNumber);
-        $arrNumber = [];
-        $arrNumber = [1,2,1,2,3];
+        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->toArray();
+        sort($arrNumber);
         $arrNumber =  array_unique($arrNumber);
-        dd($arrNumber);
-        return $this->responseAPI(true, '', $arrNumber, 200);
+        $dataOutput = [];
+        if (count($arrNumber) > 0){
+            foreach ($arrNumber as $key => $value){
+                $dataOutput[$value] = FitnessLogs::where('day_count', $value)->count();
+            }
+        }
+        return $this->responseAPI(true, '', $dataOutput, 200);
     }
 }
