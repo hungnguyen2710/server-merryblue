@@ -180,7 +180,7 @@ class UserController extends AppBaseController
     public function chartLog(){
         $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->toArray();
         sort($arrNumber);
-        $arrNumber =  array_unique($arrNumber);
+//        $arrNumber =  array_unique($arrNumber);
         dd($arrNumber);
         $dataOutput = [];
         if (count($arrNumber) > 0){
