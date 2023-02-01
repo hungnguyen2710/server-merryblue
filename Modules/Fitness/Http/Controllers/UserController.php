@@ -212,4 +212,9 @@ class UserController extends AppBaseController
             return $this->responseAPI(false, 'user không tồn tại', null, 400);
         }
     }
+
+    public function listUser(){
+        $user = FitnessUser::with(['exercise'])->paginate(100);
+        return $this->responseAPI(true, '', $user, 200);
+    }
 }
