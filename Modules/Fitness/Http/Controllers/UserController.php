@@ -9,6 +9,7 @@ use App\Models\FitnessLogs;
 use App\Models\FitnessRating;
 use App\Models\FitnessUser;
 use App\Models\FitnessUserCategory;
+use App\Models\FitnessUserExercise;
 use App\Models\FitnessUserHistory;
 use App\Models\FitnessUserInfo;
 use Illuminate\Contracts\Support\Renderable;
@@ -190,5 +191,25 @@ class UserController extends AppBaseController
             }
         }
         return $this->responseAPI(true, '', $dataOutput, 200);
+    }
+
+    public function userExercise(Request $request){
+        $request->validate([
+            'user_name' => 'required',
+            'fitness_exercise_id' => 'required',
+        ]);
+
+        $user = FitnessUser::where('name', $request->user_name)->first();
+        if ($user){
+            $dataInput = [
+                'fitness_user_id' => $user->id,
+                'fitness_exercise_id' => $request->fitness_exercise_id,
+            ];
+
+            $userEx = FitnessUserExercise::create($dataInput);
+            return $this->responseAPI(true, '', $userEx, 200);
+        }else{
+            return $this->responseAPI(false, 'user không tồn tại', null, 400);
+        }
     }
 }
