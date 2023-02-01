@@ -189,7 +189,6 @@ class UserController extends AppBaseController
                 $dataOutput[$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
             }
         }
-        dd($dataOutput);
         return $this->responseAPI(true, '', $dataOutput, 200);
     }
 }
