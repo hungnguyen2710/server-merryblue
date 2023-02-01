@@ -15,4 +15,9 @@ class FitnessUserExercise extends Model
       'fitness_user_id',
       'fitness_exercise_id',
     ];
+
+    public function detail()
+    {
+        return $this->hasOne(FitnessExercise::class,'fitness_exercise_id','id');
+    }
 }

@@ -214,7 +214,7 @@ class UserController extends AppBaseController
     }
 
     public function listUser(){
-        $user = FitnessUser::with(['exercise'])->paginate(100);
+        $user = FitnessUser::with(['exercise.detail'])->paginate(100);
         return $this->responseAPI(true, '', $user, 200);
     }
 }
