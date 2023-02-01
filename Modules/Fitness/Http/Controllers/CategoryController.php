@@ -247,7 +247,18 @@ class CategoryController extends AppBaseController
                 $userCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q){
                     $q->where('language_code', null)->orWhere('language_code','en');
                 })->get()->pluck('fitness_category_id')->toArray();
-                $category = FitnessCategory::whereIn('id', $userCategory)
+                $arrCategoryTemporary = [];
+                if (count($userCategory) > 0){
+                    foreach ($userCategory as $value){
+                        $check = FitnessCategory::where('id', $value)->first();
+                        if ($check->parent_id == null || !isset($check->parent_id)){
+                            array_push($arrCategoryTemporary,$value);
+                        }else{
+                            array_push($arrCategoryTemporary,$check->parent_id);
+                        }
+                    }
+                }
+                $category = FitnessCategory::whereIn('id', $arrCategoryTemporary)
                     ->get();
                 return $this->responseAPI(true, '', $category, 200);
             }else{
