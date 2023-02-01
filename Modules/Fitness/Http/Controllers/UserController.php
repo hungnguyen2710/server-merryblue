@@ -56,10 +56,13 @@ class UserController extends AppBaseController
                         FitnessUserCategory::create($userCategoryInput);
                     }
                 }
+                DB::commit();
+                return $this->responseAPI(true, '', $user, 200);
+            }else{
+                return $this->responseAPI(false, 'user da ton tai', null, 400);
             }
 
-            DB::commit();
-            return $this->responseAPI(true, '', $user, 200);
+
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->responseAPI(false, '', null, 400);
