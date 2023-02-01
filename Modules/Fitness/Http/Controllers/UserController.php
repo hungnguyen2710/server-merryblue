@@ -182,10 +182,11 @@ class UserController extends AppBaseController
         sort($arrNumber);
         $arrNumber =  array_unique($arrNumber);
         $dataOutput = [];
+        $count = 0;
         if (count($arrNumber) > 0){
             foreach ($arrNumber as $key => $value){
-                $dataOutput[$key]['number_day'] = $value;
-                $dataOutput[$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
+                $dataOutput[$count++]['number_day'] = $value;
+                $dataOutput[$count++]['number_user'] = FitnessLogs::where('day_count', $value)->count();
             }
         }
         return $this->responseAPI(true, '', $dataOutput, 200);
