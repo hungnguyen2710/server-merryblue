@@ -34,6 +34,10 @@ class UserController extends AppBaseController
             $dataInput = [
                 'name' => $request->name,
             ];
+            $check = FitnessUser::where('name',$request->name)->first();
+            if ($check){
+                return $this->responseAPI(false, 'user da ton tai', null, 400);
+            }
             $user = FitnessUser::create($dataInput);
 
 
@@ -58,8 +62,6 @@ class UserController extends AppBaseController
                 }
                 DB::commit();
                 return $this->responseAPI(true, '', $user, 200);
-            }else{
-                return $this->responseAPI(false, 'user da ton tai', null, 400);
             }
 
 
