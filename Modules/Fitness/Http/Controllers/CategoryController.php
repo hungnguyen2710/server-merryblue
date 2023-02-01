@@ -274,52 +274,52 @@ class CategoryController extends AppBaseController
                     $checkCategory = FitnessCategory::whereIn('parent_id', $userCategory)->where('language_code',$language)
                         ->get();
 
-                    if (count($checkCategory) <= 0){
-                        $category = FitnessCategory::whereIn('id', $userCategory)
-                            ->get();
-                        $tr = new GoogleTranslate($language);
-                        foreach ($category as $value){
-                            $dataInputTran = [
-                                'title' => $tr->translate($value->title),
-                                'description' => $tr->translate($value->description),
-                                'time' => $value->time,
-                                'total_workout' => $value->total_workout,
-                                'calories' => $value->calories,
-                                'icon' => $value->icon,
-                                'thumbnail' => $value->thumbnail,
-                                'sort_order' => $value->sort_order,
-                                'type' => $value->type,
-                                'language_code' => $language,
-                                'parent_id' => $value->id,
-                            ];
-                            FitnessCategory::create($dataInputTran);
-                        }
-
-                        $checkCategory2 = FitnessCategory::whereIn('parent_id', $userCategory)->where('language_code',$language)
-                            ->get();
-                        if (count($checkCategory2) > 0){
-
-                            foreach ($checkCategory2 as $value){
-                                $userCategoryInput2 = [
-                                    'fitness_user_id'  => $user->id,
-                                    'fitness_category_id'  => $value->id,
-                                    'language_code'  => $language,
-                                ];
-
-                                FitnessUserCategory::create($userCategoryInput2);
-                            }
-                            $checkUserCategory3 = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
-                                $q->where('language_code', $language);
-                            })->get()->pluck('fitness_category_id')->toArray();
-                            $category3 = FitnessCategory::whereIn('id', $checkUserCategory3)
-                                ->get();
-                            $category3->map(function ($item){
-                                $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
-                                $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
-                            });
-                            return $this->responseAPI(true, '', $category3, 200);
-                        }
-                    }else{
+                    //if (count($checkCategory) <= 0){
+//                        $category = FitnessCategory::whereIn('id', $userCategory)
+//                            ->get();
+//                        $tr = new GoogleTranslate($language);
+//                        foreach ($category as $value){
+//                            $dataInputTran = [
+//                                'title' => $tr->translate($value->title),
+//                                'description' => $tr->translate($value->description),
+//                                'time' => $value->time,
+//                                'total_workout' => $value->total_workout,
+//                                'calories' => $value->calories,
+//                                'icon' => $value->icon,
+//                                'thumbnail' => $value->thumbnail,
+//                                'sort_order' => $value->sort_order,
+//                                'type' => $value->type,
+//                                'language_code' => $language,
+//                                'parent_id' => $value->id,
+//                            ];
+//                            FitnessCategory::create($dataInputTran);
+//                        }
+//
+//                        $checkCategory2 = FitnessCategory::whereIn('parent_id', $userCategory)->where('language_code',$language)
+//                            ->get();
+//                        if (count($checkCategory2) > 0){
+//
+//                            foreach ($checkCategory2 as $value){
+//                                $userCategoryInput2 = [
+//                                    'fitness_user_id'  => $user->id,
+//                                    'fitness_category_id'  => $value->id,
+//                                    'language_code'  => $language,
+//                                ];
+//
+//                                FitnessUserCategory::create($userCategoryInput2);
+//                            }
+//                            $checkUserCategory3 = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
+//                                $q->where('language_code', $language);
+//                            })->get()->pluck('fitness_category_id')->toArray();
+//                            $category3 = FitnessCategory::whereIn('id', $checkUserCategory3)
+//                                ->get();
+//                            $category3->map(function ($item){
+//                                $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+//                                $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
+//                            });
+//                            return $this->responseAPI(true, '', $category3, 200);
+//                        }
+                    //}else{
                         foreach ($checkCategory as $value){
                             $userCategoryInput3 = [
                                 'fitness_user_id'  => $user->id,
@@ -339,7 +339,7 @@ class CategoryController extends AppBaseController
                             $item['icon']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->icon);
                         });
                         return $this->responseAPI(true, '', $category4, 200);
-                    }
+                    //}
                 }else{
                     $checkUserCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q) use ($language){
                         $q->where('language_code', $language);
