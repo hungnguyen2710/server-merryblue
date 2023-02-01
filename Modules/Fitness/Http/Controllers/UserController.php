@@ -181,7 +181,7 @@ class UserController extends AppBaseController
 //        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->toArray();
 //        sort($arrNumber);
         $arrNumber = [1,2,1,2,3];
-        array_unique($arrNumber);
-        return $this->responseAPI(true, '', $arrNumber, 200);
+       $test =  array_unique($arrNumber);
+        return $this->responseAPI(true, '', $test, 200);
     }
 }
