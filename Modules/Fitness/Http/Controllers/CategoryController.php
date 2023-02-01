@@ -241,7 +241,7 @@ class CategoryController extends AppBaseController
 
         $language = in_array($language, $arrLanguage) ? $language : 'en';
 
-        $user = FitnessUser::where('name', $request->name)->first();
+        $user = FitnessUser::where('name', $request->name)->orderBy('created_at', 'DESC')->first();
         if ($user) {
             if ($language == 'en'){
                 $userCategory = FitnessUserCategory::where('fitness_user_id', $user->id)->where(function ($q){
