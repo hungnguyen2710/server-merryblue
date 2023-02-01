@@ -178,7 +178,7 @@ class UserController extends AppBaseController
     }
 
     public function chartLog(){
-        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->get();
+        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count');
 
         return $this->responseAPI(true, '', $arrNumber, 200);
     }
