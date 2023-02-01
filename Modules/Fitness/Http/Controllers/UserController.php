@@ -176,4 +176,10 @@ class UserController extends AppBaseController
             return $this->responseAPI(false, 'Da ton tai', null, 400);
         }
     }
+
+    public function chartLog(){
+        $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->get();
+
+        return $this->responseAPI(true, '', $arrNumber, 200);
+    }
 }
