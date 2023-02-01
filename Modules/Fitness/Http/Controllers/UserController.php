@@ -181,11 +181,12 @@ class UserController extends AppBaseController
         $arrNumber = FitnessLogs::orderBy('created_at','DESC')->pluck('day_count')->toArray();
         sort($arrNumber);
         $arrNumber =  array_unique($arrNumber);
+        dd($arrNumber);
         $dataOutput = [];
         if (count($arrNumber) > 0){
             foreach ($arrNumber as $key => $value){
-                $dataOutput[][$key]['number_day'] = $value;
-                $dataOutput[][$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
+                $dataOutput[$key]['number_day'] = $value;
+                $dataOutput[$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
             }
         }
         return $this->responseAPI(true, '', $dataOutput, 200);
