@@ -17,4 +17,8 @@ class FitnessUser extends Model
         'email_verified_at' ,
         'password' ,
     ];
+
+    public function exercise(){
+        return $this->hasMany(FitnessUserExercise::class,'fitness_user_id', 'id');
+    }
 }
