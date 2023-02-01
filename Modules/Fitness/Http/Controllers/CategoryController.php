@@ -138,6 +138,7 @@ class CategoryController extends AppBaseController
        if ($language != 'en'){
            $categoryTemporary = FitnessCategory::where('language_code', null)->orWhere('language_code','en')->get();
            $categoryDelete = FitnessCategory::where('language_code', $language)->get();
+           dd($categoryDelete->toArray());
            if ((count($categoryTemporary) > count($categoryDelete))){
                if (count($categoryDelete) > 0){
                    foreach ($categoryDelete as $value){
