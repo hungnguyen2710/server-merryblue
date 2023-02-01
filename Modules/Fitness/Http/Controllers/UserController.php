@@ -126,6 +126,9 @@ class UserController extends AppBaseController
         $dataOutput['today'] = FitnessUser::where('created_at', '>=', Carbon::today()->toDateString())->count();
         $dataOutput['week'] = FitnessUser::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
         $dataOutput['month'] = FitnessUser::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+        $dataOutput['last_month'] = FitnessUser::whereMonth(
+            'created_at', '=', Carbon::now()->subMonth()->month
+        )->count();
         return $this->responseAPI(true, '', $dataOutput, 200);
     }
 
