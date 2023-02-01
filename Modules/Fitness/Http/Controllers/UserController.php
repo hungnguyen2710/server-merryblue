@@ -184,8 +184,8 @@ class UserController extends AppBaseController
         $dataOutput = [];
         if (count($arrNumber) > 0){
             foreach ($arrNumber as $key => $value){
-                $dataOutput[$key]['number_day'] = $value;
-                $dataOutput[$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
+                $dataOutput[][$key]['number_day'] = $value;
+                $dataOutput[][$key]['number_user'] = FitnessLogs::where('day_count', $value)->count();
             }
         }
         return $this->responseAPI(true, '', $dataOutput, 200);
