@@ -18,6 +18,6 @@ class FitnessUserExercise extends Model
 
     public function detail()
     {
-        return $this->hasOne(FitnessExercise::class,'fitness_exercise_id','id');
+        return $this->hasOne(FitnessExercise::class,'id','fitness_exercise_id');
     }
 }
