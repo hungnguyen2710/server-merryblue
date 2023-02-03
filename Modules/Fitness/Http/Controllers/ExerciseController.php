@@ -171,55 +171,16 @@ class ExerciseController extends AppBaseController
                     return $this->responseAPI(true, '', $dataOutput, 200);
                 }
             }else{
-                $categoryCheck = FitnessCategory::where('id',$categoryId)->first();
-                $exerciseByParent = FitnessExercise::where('fitness_category_id', $categoryCheck->parent_id)->get();
-                if (count($exercise) < count($exerciseByParent)){
-                    foreach ($exercise as $value){
-                        $value->delete();
-                    }
-                    if (count($exerciseByParent) > 0){
-                        $tr = new GoogleTranslate($language);
-                        foreach ($exerciseByParent as $value){
-                            $dataInput = [
-                                'fitness_category_id' => $categoryId,
-                                'title' => $tr->translate($value->title),
-                                'time' => $value->time,
-                                'number_of_reps' => $value->number_of_reps,
-                                'rest_time' => $value->rest_time,
-                                'tips' => $tr->translate($value->tips),
-                                'calories' => $value->calories,
-                                'description' => $tr->translate($value->description),
-                                'image_action' => $value->image_action,
-                                'thumbnail' => $value->thumbnail,
-                                'language_code' => $language,
-                            ];
-
-                            FitnessExercise::create($dataInput);
-                        }
-                        $exerciseByCategory = FitnessExercise::where('fitness_category_id', $categoryId)->get();
-                        $exerciseByCategory->map(function ($item){
-                            $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
-                            $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
-                            return $item;
-                        });
-                        $categoryDetail = FitnessCategory::where('id',$categoryId)->first();
-                        $dataOutput = [];
-                        $dataOutput['category'] = $categoryDetail;
-                        $dataOutput['exercise'] = $exerciseByCategory;
-                        return $this->responseAPI(true, '', $dataOutput, 200);
-                    }
-                }else{
-                    $exercise->map(function ($item){
-                        $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
-                        $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
-                        return $item;
-                    });
-                    $categoryDetail = FitnessCategory::where('id',$categoryId)->first();
-                    $dataOutput = [];
-                    $dataOutput['category'] = $categoryDetail;
-                    $dataOutput['exercise'] = $exercise;
-                    return $this->responseAPI(true, '', $dataOutput, 200);
-                }
+                $exercise->map(function ($item){
+                    $item['image_action']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->image_action);
+                    $item['thumbnail']= str_replace(config('app.storage_url').config('app.storage_url'),'',$item->thumbnail);
+                    return $item;
+                });
+                $categoryDetail = FitnessCategory::where('id',$categoryId)->first();
+                $dataOutput = [];
+                $dataOutput['category'] = $categoryDetail;
+                $dataOutput['exercise'] = $exercise;
+                return $this->responseAPI(true, '', $dataOutput, 200);
             }
         }
 
