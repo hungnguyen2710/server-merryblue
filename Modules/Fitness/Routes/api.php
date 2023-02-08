@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/list-by-user', [CategoryController::class, 'listCategoryByUser']);
             Route::post('/create', [CategoryController::class, 'createCategory']);
             Route::post('/update-thumbnail', [CategoryController::class, 'updateThumbnail']);
+            Route::get('/list-default', [CategoryController::class, 'listCategoryDefault']);
         });
 
         Route::group(['prefix' => 'exercise'], function () {
