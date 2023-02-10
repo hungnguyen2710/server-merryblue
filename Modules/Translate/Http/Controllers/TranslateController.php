@@ -214,7 +214,7 @@ class TranslateController extends AppBaseController
         }
 
         $imple = implode("/", $arrSource);
-        $urlFinal = $http.$imple.'?_x_tr_sl='.$request->language_from.'&_x_tr_tl='.$request->language_to.'_x_tr_pto=wapp';
+        $urlFinal = $http.$imple.'?_x_tr_sl='.$request->language_from.'&_x_tr_tl='.$request->language_to.'&_x_tr_pto=wapp';
         return $this->responseAPI(true,'',$urlFinal, 200);
     }
 
