@@ -17,7 +17,8 @@
         "ssovit/tiktok-api": "^2.0",
         "stichoza/google-translate-php": "^4.1",
         "symfony/finder": "6.1",
-        "symfony/http-client": "^6.2"
+        "symfony/http-client": "^6.2",
+        "vqhteam/ytdownload": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

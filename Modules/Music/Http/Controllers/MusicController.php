@@ -8,12 +8,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Spotify;
+use Vqhteam\Ytdownload\YTDownload;
 
 class MusicController extends AppBaseController
 {
     public function search(Request $request){
 
-      $video = Youtube::getVideoInfo('rie-hPVJ7Sw');
+      $video = YTDownload::getLink("rie-hPVJ7Sw");
       return $video;
     }
 }
