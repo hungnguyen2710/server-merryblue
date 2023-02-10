@@ -193,4 +193,29 @@ class TranslateController extends AppBaseController
         return $this->responseAPI(true,'',$translated, 200);
     }
 
+    public function translateWebsite(Request $request){
+        $request->validate([
+            'url' => 'required',
+            'language_from' => 'required',
+            'language_to' => 'required',
+        ]);
+
+        $url = $request->url;
+        $arrHttp = explode("//", $url, 2);
+        $http = $arrHttp[0];
+        $stringSource = $arrHttp[1];
+        $arrSource =  explode("/", $stringSource);
+
+        $rpUrl = str_replace('.','-',$arrSource[0]).'.translate.goog';
+        foreach ($arrSource as $key => $value){
+            if ($key == 0){
+                $arrSource[0] = $rpUrl;
+            }
+        }
+
+        $imple = implode("/", $arrSource);
+        $urlFinal = $http.$imple.'?_x_tr_sl='.$request->language_from.'&_x_tr_tl='.$request->language_to.'_x_tr_pto=wapp';
+        return $this->responseAPI(true,'',$urlFinal, 200);
+    }
+
 }

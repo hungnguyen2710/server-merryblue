@@ -25,6 +25,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/string-5', [TranslateController::class, 'translateString5']);
             Route::post('/string-6', [TranslateController::class, 'translateString6']);
         });
+
+        Route::get('/website', [TranslateController::class, 'translateWebsite']);
     });
 
 });
