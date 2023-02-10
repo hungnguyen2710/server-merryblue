@@ -202,7 +202,7 @@ class TranslateController extends AppBaseController
 
         $url = $request->url;
         $arrHttp = explode("//", $url, 2);
-        $http = $arrHttp[0];
+        $http = $arrHttp[0].'//';
         $stringSource = $arrHttp[1];
         $arrSource =  explode("/", $stringSource);
 
