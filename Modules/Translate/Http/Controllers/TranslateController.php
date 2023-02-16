@@ -199,8 +199,13 @@ class TranslateController extends AppBaseController
             'language_from' => 'required',
             'language_to' => 'required',
         ]);
+        if (str_contains($request->url, 'https://') || str_contains($request->url, 'http://')){
+            $url = $request->url;
+        }else{
+            $url = 'https://'.$request->url;
+        }
 
-        $url = $request->url;
+
         $arrHttp = explode("//", $url, 2);
         $http = $arrHttp[0].'//';
         $stringSource = $arrHttp[1];
