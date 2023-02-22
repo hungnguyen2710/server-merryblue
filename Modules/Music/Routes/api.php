@@ -17,6 +17,13 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => 'music'], function () {
         Route::get('/search', [MusicController::class, 'search']);
+        Route::get('/track-detail', [MusicController::class, 'trackDetail']);
+    });
+
+    Route::group(['prefix' => 'video'], function () {
+        Route::get('/search', [MusicController::class, 'searchVideo']);
+        Route::get('/popular', [MusicController::class, 'getPopularVideos']);
+        Route::get('/get-link', [MusicController::class, 'downloadVideo']);
     });
 
 });
