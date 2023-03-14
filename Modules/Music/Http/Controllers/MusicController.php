@@ -7,6 +7,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 use Spotify;
 use Vqhteam\Ytdownload\YTDownload;
 
@@ -46,8 +47,15 @@ class MusicController extends AppBaseController
             'track_id' => 'required',
         ]);
 
-        $track = Spotify::track($request->track_id)->get();
-        return $this->responseAPI(true, '', $track, 200);
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'X-RapidAPI-Key' => '827caf23d9msh472c74dfb8aeec9p120081jsnfaf3217fdc3b',
+            'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com',
+        ])
+            ->send('GET', 'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud?track='. $request->track_id)->json();
+        $dataOutput = [];
+        $dataOutput['audio'][] = $response['soundcloudTrack']['audio'];
+        return $this->responseAPI(true, '', $dataOutput, 200);
     }
 
     public function searchVideo(Request $request)
@@ -91,5 +99,19 @@ class MusicController extends AppBaseController
         }catch (\Exception $e){
             return $this->responseAPI(false, '', null, 400);
         }
+    }
+
+    public function detailMusic(Request $request){
+        $request->validate([
+            'track_id' => 'required',
+        ]);
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'X-RapidAPI-Key' => '827caf23d9msh472c74dfb8aeec9p120081jsnfaf3217fdc3b',
+            'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com',
+        ])
+            ->send('GET', 'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud?track='. $request->track_id)->json();
+        return $this->responseAPI(true, '', $response, 200);
     }
 }
