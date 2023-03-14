@@ -53,8 +53,14 @@ class MusicController extends AppBaseController
             'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com',
         ])
             ->send('GET', 'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud?track='. $request->track_id)->json();
-        $dataOutput = [];
-        $dataOutput['audio'][] = $response['soundcloudTrack']['audio'];
+        $dataOutput = null;
+        if (count($response['soundcloudTrack']['audio']) > 0){
+            foreach ($response['soundcloudTrack']['audio'] as $key => $value){
+                if ($value['format'] == 'mp3'){
+                    $dataOutput = $value;
+                }
+            }
+        }
         return $this->responseAPI(true, '', $dataOutput, 200);
     }
 
