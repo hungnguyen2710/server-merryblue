@@ -66,27 +66,53 @@ class MusicController extends AppBaseController
 
     public function searchVideo(Request $request)
     {
-        $request->validate([
-            'video' => 'required',
-        ]);
-        $results = Youtube::search($request->video);
-        $dataOutput = [];
-        if (count($results) > 0) {
-            foreach ($results as $key => $value) {
-                if (isset($value->id->videoId)){
-                $dataOutput[$key]['artists'] = '';
-                $dataOutput[$key]['id'] = isset($value->id->videoId) ? $value->id->videoId : '';
-                $dataOutput[$key]['duration_ms'] = null;
-                $dataOutput[$key]['url'] = '';
-                $dataOutput[$key]['name'] = $value->snippet->title;
-                $dataOutput[$key]['preview_url'] = '';
-                $dataOutput[$key]['uri'] = '';
-                $dataOutput[$key]['thumbnail'] = $value->snippet->thumbnails->high->url ? $value->snippet->thumbnails->high->url : $value->snippet->thumbnails->default->url;
+        try {
+            $request->validate([
+                'video' => 'required',
+            ]);
+            $results = Youtube::search($request->video);
+            $dataOutput = [];
+            if (count($results) > 0) {
+                foreach ($results as $key => $value) {
+                    if (isset($value->id->videoId)){
+                        $dataOutput[$key]['artists'] = '';
+                        $dataOutput[$key]['id'] = isset($value->id->videoId) ? $value->id->videoId : '';
+                        $dataOutput[$key]['duration_ms'] = null;
+                        $dataOutput[$key]['url'] = '';
+                        $dataOutput[$key]['name'] = $value->snippet->title;
+                        $dataOutput[$key]['preview_url'] = '';
+                        $dataOutput[$key]['uri'] = '';
+                        $dataOutput[$key]['thumbnail'] = $value->snippet->thumbnails->high->url ? $value->snippet->thumbnails->high->url : $value->snippet->thumbnails->default->url;
+                    }
                 }
             }
+            return $this->responseAPI(true, '', $dataOutput, 200);
+        }catch (\Exception $e){
+            $dataOutput = [];
+            $response = Http::withHeaders([
+                'X-RapidAPI-Key' => '827caf23d9msh472c74dfb8aeec9p120081jsnfaf3217fdc3b',
+                'X-RapidAPI-Host' => 'simple-youtube-search.p.rapidapi.com',
+            ])
+                ->send('GET', 'https://simple-youtube-search.p.rapidapi.com/search?query='.$request->video.'&safesearch=false')->json();
+            if (count($response['results']) > 0){
+
+                foreach ($response['results'] as $key => $value){
+
+                    $dataOutput[$key]['artists'] = '';
+                    $dataOutput[$key]['id'] = isset($value['id']) ? $value['id'] : '';
+                    $dataOutput[$key]['duration_ms'] = null;
+                    $dataOutput[$key]['url'] = '';
+                    $dataOutput[$key]['name'] = $value['title'];
+                    $dataOutput[$key]['preview_url'] = '';
+                    $dataOutput[$key]['uri'] = '';
+                    $dataOutput[$key]['thumbnail'] = $value['thumbnail']['url'] ?  $value['thumbnail']['url'] : '';
+                }
+            }
+            return $this->responseAPI(true, '', $dataOutput, 200);
         }
 
-        return $this->responseAPI(true, '', $dataOutput, 200);
+
+
     }
 
     public function getPopularVideos()
