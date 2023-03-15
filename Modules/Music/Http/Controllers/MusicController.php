@@ -118,9 +118,15 @@ class MusicController extends AppBaseController
             $dataOutput['thumbnail'] = isset($response['thumb']) ? $response['thumb'] : '';
             if (count($response['url']) > 0){
                 foreach ($response['url'] as $key => $value){
-                    $dataOutput['links'][$key]['link'] = $value['url'];
-                    $dataOutput['links'][$key]['mineType'] = $value['type'];
-                    $dataOutput['links'][$key]['quality'] = $value['quality'];
+                    if ($value['quality'] == '720'){
+                        $dataOutput['url'] = $value['url'];
+                        $dataOutput['mineType'] = $value['type'];
+                        $dataOutput['quality'] = $value['quality'];
+                    }else{
+                        $dataOutput['url'] = isset($response['url'][0]['url']) ? $response['url'][0]['url'] : '';
+                        $dataOutput['mineType'] = isset($response['url'][0]['type']) ? $response['url'][0]['type'] : '';
+                        $dataOutput['quality'] = isset($response['url'][0]['quality']) ? $response['url'][0]['quality'] : '';
+                    }
                 }
             }
 
