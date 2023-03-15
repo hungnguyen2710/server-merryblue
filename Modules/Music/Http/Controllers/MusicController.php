@@ -100,8 +100,31 @@ class MusicController extends AppBaseController
             'video_id' => 'required',
         ]);
         try {
-            $video = YTDownload::getLink($request->video_id);
-            return $this->responseAPI(true, '', $video, 200);
+            $dataSend = [
+                'url' => 'https://www.youtube.com/watch?v='. $request->video_id,
+            ];
+
+            $dataOutput = [];
+            $response = Http::withHeaders([
+                'content-type' => 'application/json',
+            ])
+                ->post('https://ssyoutube.com/api/convert', $dataSend)->json();
+
+            $dataOutput['title'] = isset($response['meta']['title']) ? $response['meta']['title'] : '';
+            $dataOutput['viewCount'] = 0;
+            $dataOutput['channelId'] = '';
+            $dataOutput['author'] = '';
+            $dataOutput['thumbnail'] = isset($response['thumb']) ? $response['thumb'] : '';
+            if (count($response['url']) > 0){
+                foreach ($response['url'] as $key => $value){
+                    $dataOutput['links'][$key]['link'] = $value['url'];
+                    $dataOutput['links'][$key]['mineType'] = $value['type'];
+                    $dataOutput['links'][$key]['quality'] = $value['quality'];
+                }
+            }
+
+
+            return $this->responseAPI(true, '', $dataOutput, 200);
         }catch (\Exception $e){
             return $this->responseAPI(false, '', null, 400);
         }
