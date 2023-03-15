@@ -70,18 +70,19 @@ class MusicController extends AppBaseController
             'video' => 'required',
         ]);
         $results = Youtube::search($request->video);
-
         $dataOutput = [];
         if (count($results) > 0) {
             foreach ($results as $key => $value) {
+                if (isset($value->id->videoId)){
                 $dataOutput[$key]['artists'] = '';
-                $dataOutput[$key]['id'] = $value->id->videoId;
+                $dataOutput[$key]['id'] = isset($value->id->videoId) ? $value->id->videoId : '';
                 $dataOutput[$key]['duration_ms'] = null;
                 $dataOutput[$key]['url'] = '';
                 $dataOutput[$key]['name'] = $value->snippet->title;
                 $dataOutput[$key]['preview_url'] = '';
                 $dataOutput[$key]['uri'] = '';
                 $dataOutput[$key]['thumbnail'] = $value->snippet->thumbnails->high->url ? $value->snippet->thumbnails->high->url : $value->snippet->thumbnails->default->url;
+                }
             }
         }
 
