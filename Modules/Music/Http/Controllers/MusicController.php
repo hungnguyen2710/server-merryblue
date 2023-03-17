@@ -53,33 +53,66 @@ class MusicController extends AppBaseController
             'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com',
         ])
             ->send('GET', 'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud?track='. $request->track_id)->json();
-        $dataOutput = [];
-        $dataOutput['audio'][] = $response['soundcloudTrack']['audio'];
+        $dataOutput = null;
+        if (count($response['soundcloudTrack']['audio']) > 0){
+            foreach ($response['soundcloudTrack']['audio'] as $key => $value){
+                if ($value['format'] == 'mp3'){
+                    $dataOutput = $value;
+                }
+            }
+        }
         return $this->responseAPI(true, '', $dataOutput, 200);
     }
 
     public function searchVideo(Request $request)
     {
-        $request->validate([
-            'video' => 'required',
-        ]);
-        $results = Youtube::search($request->video);
-
-        $dataOutput = [];
-        if (count($results) > 0) {
-            foreach ($results as $key => $value) {
-                $dataOutput[$key]['artists'] = '';
-                $dataOutput[$key]['id'] = $value->id->videoId;
-                $dataOutput[$key]['duration_ms'] = null;
-                $dataOutput[$key]['url'] = '';
-                $dataOutput[$key]['name'] = $value->snippet->title;
-                $dataOutput[$key]['preview_url'] = '';
-                $dataOutput[$key]['uri'] = '';
-                $dataOutput[$key]['thumbnail'] = $value->snippet->thumbnails->high->url ? $value->snippet->thumbnails->high->url : $value->snippet->thumbnails->default->url;
+        try {
+            $request->validate([
+                'video' => 'required',
+            ]);
+            $results = Youtube::search($request->video);
+            $dataOutput = [];
+            if (count($results) > 0) {
+                foreach ($results as $key => $value) {
+                    if (isset($value->id->videoId)){
+                        $dataOutput[$key]['artists'] = '';
+                        $dataOutput[$key]['id'] = isset($value->id->videoId) ? $value->id->videoId : '';
+                        $dataOutput[$key]['duration_ms'] = null;
+                        $dataOutput[$key]['url'] = '';
+                        $dataOutput[$key]['name'] = $value->snippet->title;
+                        $dataOutput[$key]['preview_url'] = '';
+                        $dataOutput[$key]['uri'] = '';
+                        $dataOutput[$key]['thumbnail'] = $value->snippet->thumbnails->high->url ? $value->snippet->thumbnails->high->url : $value->snippet->thumbnails->default->url;
+                    }
+                }
             }
+            return $this->responseAPI(true, '', $dataOutput, 200);
+        }catch (\Exception $e){
+            $dataOutput = [];
+            $response = Http::withHeaders([
+                'X-RapidAPI-Key' => '827caf23d9msh472c74dfb8aeec9p120081jsnfaf3217fdc3b',
+                'X-RapidAPI-Host' => 'simple-youtube-search.p.rapidapi.com',
+            ])
+                ->send('GET', 'https://simple-youtube-search.p.rapidapi.com/search?query='.$request->video.'&safesearch=false')->json();
+            if (count($response['results']) > 0){
+
+                foreach ($response['results'] as $key => $value){
+
+                    $dataOutput[$key]['artists'] = '';
+                    $dataOutput[$key]['id'] = isset($value['id']) ? $value['id'] : '';
+                    $dataOutput[$key]['duration_ms'] = null;
+                    $dataOutput[$key]['url'] = '';
+                    $dataOutput[$key]['name'] = $value['title'];
+                    $dataOutput[$key]['preview_url'] = '';
+                    $dataOutput[$key]['uri'] = '';
+                    $dataOutput[$key]['thumbnail'] = $value['thumbnail']['url'] ?  $value['thumbnail']['url'] : '';
+                }
+            }
+            return $this->responseAPI(true, '', $dataOutput, 200);
         }
 
-        return $this->responseAPI(true, '', $dataOutput, 200);
+
+
     }
 
     public function getPopularVideos()
@@ -94,8 +127,37 @@ class MusicController extends AppBaseController
             'video_id' => 'required',
         ]);
         try {
-            $video = YTDownload::getLink($request->video_id);
-            return $this->responseAPI(true, '', $video, 200);
+            $dataSend = [
+                'url' => 'https://www.youtube.com/watch?v='. $request->video_id,
+            ];
+
+            $dataOutput = [];
+            $response = Http::withHeaders([
+                'content-type' => 'application/json',
+            ])
+                ->post('https://ssyoutube.com/api/convert', $dataSend)->json();
+
+            $dataOutput['title'] = isset($response['meta']['title']) ? $response['meta']['title'] : '';
+            $dataOutput['viewCount'] = 0;
+            $dataOutput['channelId'] = '';
+            $dataOutput['author'] = '';
+            $dataOutput['thumbnail'] = isset($response['thumb']) ? $response['thumb'] : '';
+            if (count($response['url']) > 0){
+                foreach ($response['url'] as $key => $value){
+                    if ($value['quality'] == '720'){
+                        $dataOutput['url'] = $value['url'];
+                        $dataOutput['mineType'] = $value['type'];
+                        $dataOutput['quality'] = $value['quality'];
+                    }else{
+                        $dataOutput['url'] = isset($response['url'][0]['url']) ? $response['url'][0]['url'] : '';
+                        $dataOutput['mineType'] = isset($response['url'][0]['type']) ? $response['url'][0]['type'] : '';
+                        $dataOutput['quality'] = isset($response['url'][0]['quality']) ? $response['url'][0]['quality'] : '';
+                    }
+                }
+            }
+
+
+            return $this->responseAPI(true, '', $dataOutput, 200);
         }catch (\Exception $e){
             return $this->responseAPI(false, '', null, 400);
         }
