@@ -23,8 +23,8 @@ class MusicController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 10;
 
-        $tracks = Spotify::searchTracks($request->track)->limit($limit)->offset($offset)->get();
-
+        $tracks = Spotify::searchTracks($request->track)->includeExternal('audio')->get();
+//return $tracks;
         $dataOutput = [];
         if (count($tracks['tracks']['items']) > 0) {
             foreach ($tracks['tracks']['items'] as $key => $value) {
