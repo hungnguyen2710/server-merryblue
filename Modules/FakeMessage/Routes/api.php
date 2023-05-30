@@ -19,6 +19,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'fake-message'], function () {
         Route::group(['prefix' => 'celebrity'], function () {
             Route::get('/list', [FakeMessageController::class, 'listCelebrity']);
+            Route::get('/list/by-category', [FakeMessageController::class, 'listCelebrityByCategory']);
+            Route::get('/category', [FakeMessageController::class, 'categoryCelebrity']);
             Route::post('/create', [FakeMessageController::class, 'createCelebrity']);
         });
 

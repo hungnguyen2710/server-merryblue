@@ -3,6 +3,7 @@
 namespace Modules\FakeMessage\Http\Controllers;
 
 use App\Http\Controllers\AppBaseController;
+use App\Models\FakeMessageCategoryCelebrity;
 use App\Models\FakeMessageCelebrity;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -40,8 +41,27 @@ class FakeMessageController extends AppBaseController
         return $this->responseAPI(true,'', $celebrity, 200);
     }
 
-    public function listCelebrity(){
-        $celebrity = FakeMessageCelebrity::take(10)->orderBy('created_at','DESC')->get();
+    public function listCelebrity(Request $request){
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        $celebrity = FakeMessageCelebrity::orderBy('created_at','DESC')->offset($offset)->limit($limit)->get();
+
+        return $this->responseAPI(true,'', $celebrity, 200);
+    }
+
+    public function categoryCelebrity(){
+        $categoryCelebrity = FakeMessageCategoryCelebrity::all();
+        return $this->responseAPI(true,'', $categoryCelebrity, 200);
+    }
+
+    public function listCelebrityByCategory(Request $request){
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $offset = isset($request->offset) ? $request->offset : 0;
+        $categoryCelebrityId = $request->category_id;
+        $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id',$categoryCelebrityId)->orderBy('created_at','DESC')->offset($offset)->limit($limit)->get();
 
         return $this->responseAPI(true,'', $celebrity, 200);
     }
