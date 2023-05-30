@@ -41,7 +41,7 @@ class FakeMessageController extends AppBaseController
     }
 
     public function listCelebrity(){
-        $celebrity = FakeMessageCelebrity::orderBy('created_at','DESC')->limit(10)->get();
+        $celebrity = FakeMessageCelebrity::limit(10)->orderBy('created_at','DESC')->get();
 
         return $this->responseAPI(true,'', $celebrity, 200);
     }
