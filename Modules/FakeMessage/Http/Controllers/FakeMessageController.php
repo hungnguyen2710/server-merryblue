@@ -80,7 +80,8 @@ class FakeMessageController extends AppBaseController
                 'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
                 'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
             ]);
-
+            $avatar_path = '';
+            $video_path = '';
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 $avatar_path = $avatar->store('images/avatar', ['disk' => 'public']);
