@@ -23,6 +23,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/category', [FakeMessageController::class, 'categoryCelebrity']);
             Route::post('/create', [FakeMessageController::class, 'createCelebrity']);
             Route::post('/update/{celebrityId}', [FakeMessageController::class, 'updateCelebrity']);
+            Route::post('/logs/create', [FakeMessageController::class, 'createLog']);
         });
 
     });

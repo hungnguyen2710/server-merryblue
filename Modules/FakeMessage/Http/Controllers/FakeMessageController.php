@@ -5,6 +5,7 @@ namespace Modules\FakeMessage\Http\Controllers;
 use App\Http\Controllers\AppBaseController;
 use App\Models\FakeMessageCategoryCelebrity;
 use App\Models\FakeMessageCelebrity;
+use App\Models\FakemessageLogs;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -106,5 +107,19 @@ class FakeMessageController extends AppBaseController
         } else {
             return $this->responseAPI(false, 'error', null, 400);
         }
+    }
+
+    public function createLog(Request $request)
+    {
+        $request->validate([
+            'celebrity_id' => 'required',
+            'celebrity_name' => 'required',
+        ]);
+
+        $logs = FakemessageLogs::create([
+            'celebrity_id' => $request->celebrity_id,
+            'celebrity_name' => $request->celebrity_name,
+        ]);
+        return $this->responseAPI(true, '', $logs, 200);
     }
 }
