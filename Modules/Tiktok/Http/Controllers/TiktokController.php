@@ -40,7 +40,7 @@ class TiktokController extends AppBaseController
             $dataOutput['links'] = [];
             $uuid = Uuid::uuid4()->toString();
             $dataOutput['title'] = $uuid;
-            $dataOutput['thumbnail'] = $response['cover'] ? $response['cover'] : '';
+            $dataOutput['thumbnail'] = $response['cover'][0] ? $response['cover'][0]  : '';
             $dataOutput['links'][] = [
                 "url" => $response['video'] ? $response['video'] : '',
                 "format" => 'hd',
