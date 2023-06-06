@@ -122,4 +122,18 @@ class FakeMessageController extends AppBaseController
         ]);
         return $this->responseAPI(true, '', $logs, 200);
     }
+
+    public function searchCelebrity(Request $request)
+    {
+        $request->validate([
+            'key' => 'required'
+        ]);
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
+
+        return $this->responseAPI(true, '', $celebrity, 200);
+    }
 }
