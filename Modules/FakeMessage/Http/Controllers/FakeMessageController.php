@@ -49,7 +49,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
 
-        $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
+        $celebrity = FakeMessageCelebrity::orderBy('count', 'DESC')->offset($offset)->limit($limit)->get();
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
@@ -66,7 +66,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
         $categoryCelebrityId = $request->category_id;
-        $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id', $categoryCelebrityId)->orderBy('created_at', 'DESC')->paginate($limit);
+        $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id', $categoryCelebrityId)->orderBy('count', 'DESC')->paginate($limit);
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
@@ -120,6 +120,10 @@ class FakeMessageController extends AppBaseController
             'celebrity_id' => $request->celebrity_id,
             'celebrity_name' => $request->celebrity_name,
         ]);
+
+        $celebrity = FakeMessageCelebrity::where('id', $request->celebrity_id)->first();
+        $celebrity->update(['count' => $celebrity->count + 1]);
+        
         return $this->responseAPI(true, '', $logs, 200);
     }
 
@@ -132,7 +136,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
 
-        $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('created_at', 'DESC')->paginate($limit);
+        $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('count', 'DESC')->paginate($limit);
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }

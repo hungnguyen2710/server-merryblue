@@ -19,6 +19,7 @@ class FakeMessageCelebrity extends Model
       'video',
       'followers',
       'language_code',
+      'count',
     ];
 
     protected function avatar(): Attribute
