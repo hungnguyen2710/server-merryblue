@@ -59,14 +59,15 @@ class TiktokController extends AppBaseController
             TikTok::create($dataInput);
             return $this->responseAPI(true, '', $dataOutput, 200);
         } catch (Exception $e) {
-            $dataInput = [
-                'url' => $request->url,
-                'version' => 'v1',
-                'api' => 'general',
-                'status' => 0,
-            ];
-            TikTok::create($dataInput);
-            return $this->responseAPI(false, '', null, 400);
+            $responses = Http::withHeaders([
+                'Accept' => 'application/json',
+            ])
+                ->post('https://alldownloader.merryblue.llc/api/v1/tiktok/download',
+                    [
+                        'url' => $request->url
+                    ]
+                )->json();
+            return $responses;
         }
 
     }
