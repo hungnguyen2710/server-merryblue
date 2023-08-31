@@ -34,32 +34,44 @@ class TiktokController extends AppBaseController
                 'X-RapidAPI-Key' => '827caf23d9msh472c74dfb8aeec9p120081jsnfaf3217fdc3b',
                 'X-RapidAPI-Host' => 'tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com',
             ])
-                ->get('https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index?url='.$request->url)->json();
+                ->get('https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index?url=' . $request->url)->json();
+            if ($response['message'] == 'You are not subscribed to this API.') {
+                $responses = Http::withHeaders([
+                    'Accept' => 'application/json',
+                ])
+                    ->post('https://alldownloader.merryblue.llc/api/v1/tiktok/download',
+                        [
+                            'url' => $request->url
+                        ]
+                    )->json();
+                return $responses;
+            } else {
 
-            $dataOutput = [];
-            $dataOutput['links'] = [];
-            $uuid = Uuid::uuid4()->toString();
-            $dataOutput['title'] = $uuid;
-            $dataOutput['thumbnail'] = $response['cover'][0] ? $response['cover'][0]  : '';
-            $dataOutput['links'][] = [
-                "url" => $response['video'][0] ? $response['video'][0] : '',
-                "format" => 'hd',
-                "type" => 'video',
-                "size" => 'N/A',
-            ];
+                $dataOutput = [];
+                $dataOutput['links'] = [];
+                $uuid = Uuid::uuid4()->toString();
+                $dataOutput['title'] = $uuid;
+                $dataOutput['thumbnail'] = $response['cover'][0] ? $response['cover'][0] : '';
+                $dataOutput['links'][] = [
+                    "url" => $response['video'][0] ? $response['video'][0] : '',
+                    "format" => 'hd',
+                    "type" => 'video',
+                    "size" => 'N/A',
+                ];
 
 
-            $dataOutput['time'] = '';
-            $dataInput = [
-                'url' => $request->url,
-                'version' => 'v1',
-                'api' => 'crawl',
-                'status' => 1,
-            ];
-            TikTok::create($dataInput);
-            return $this->responseAPI(true, '', $dataOutput, 200);
+                $dataOutput['time'] = '';
+                $dataInput = [
+                    'url' => $request->url,
+                    'version' => 'v1',
+                    'api' => 'crawl',
+                    'status' => 1,
+                ];
+                TikTok::create($dataInput);
+                return $this->responseAPI(true, '', $dataOutput, 200);
+            }
         } catch (Exception $e) {
-            
+
             $responses = Http::withHeaders([
                 'Accept' => 'application/json',
             ])
