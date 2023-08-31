@@ -59,6 +59,7 @@ class TiktokController extends AppBaseController
             TikTok::create($dataInput);
             return $this->responseAPI(true, '', $dataOutput, 200);
         } catch (Exception $e) {
+            
             $responses = Http::withHeaders([
                 'Accept' => 'application/json',
             ])
