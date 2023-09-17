@@ -68,7 +68,7 @@ class FakeMessageController extends AppBaseController
         $categoryCelebrityId = $request->category_id;
         $celebrity = FakeMessageCelebrity::when(($categoryCelebrityId || isset($categoryCelebrityId)), function ($q) use ($categoryCelebrityId){
             $q->where('fake_message_category_celebrity_id', $categoryCelebrityId);
-        })->orderBy('count', 'DESC')->paginate($limit);
+        })->orderBy('created_at', 'DESC')->paginate($limit);
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
