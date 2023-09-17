@@ -49,7 +49,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
 
-        $celebrity = FakeMessageCelebrity::orderBy('count', 'DESC')->offset($offset)->limit($limit)->get();
+        $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
