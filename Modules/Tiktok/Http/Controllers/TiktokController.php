@@ -35,7 +35,7 @@ class TiktokController extends AppBaseController
                 'X-RapidAPI-Host' => 'tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com',
             ])
                 ->get('https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index?url=' . $request->url)->json();
-            if ($response['message'] == 'You are not subscribed to this API.') {
+            if ($response['message'] == 'You are not subscribed to this API.' || $response['message'] == 'Too many requests') {
                 $responses = Http::withHeaders([
                     'Accept' => 'application/json',
                 ])
