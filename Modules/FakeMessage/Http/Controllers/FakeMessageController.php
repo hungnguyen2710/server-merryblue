@@ -188,7 +188,6 @@ class FakeMessageController extends AppBaseController
 
         if ($celebrity) {
             $request->validate([
-                'category_celebrity_id' => 'required',
                 'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
                 'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
             ]);
@@ -207,7 +206,6 @@ class FakeMessageController extends AppBaseController
             $dataInput = [
                 'name' => $request->name ? $request->name : $celebrity->name,
                 'name_profile' => $request->name_profile ? $request->name_profile : $celebrity->name_profile,
-                'fake_message_category_celebrity_id' => $request->category_celebrity_id ? $request->category_celebrity_id : $celebrity->fake_message_category_celebrity_id,
                 'video' => $video_path ? $video_path : $celebrity->video,
                 'avatar' => $avatar_path ? $avatar_path : $celebrity->avatar,
                 'followers' => $request->followers ? $request->followers : $celebrity->followers,
