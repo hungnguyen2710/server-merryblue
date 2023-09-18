@@ -30,3 +30,14 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
 });
+
+Route::group(['prefix' => 'v2'], function () {
+    Route::group(['prefix' => 'fake-message'], function () {
+        Route::group(['prefix' => 'celebrity'], function () {
+            Route::get('/list', [FakeMessageController::class, 'listCelebrityV2']);
+            Route::get('/search', [FakeMessageController::class, 'searchCelebrityV2']);
+            Route::get('/list/by-category', [FakeMessageController::class, 'listCelebrityByCategoryV2']);
+        });
+    });
+
+});

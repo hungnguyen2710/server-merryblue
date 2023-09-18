@@ -140,4 +140,37 @@ class FakeMessageController extends AppBaseController
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
+
+    public function listCelebrityV2(Request $request)
+    {
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
+
+        return $this->responseAPI(true, '', $celebrity, 200);
+    }
+
+    public function listCelebrityByCategoryV2(Request $request)
+    {
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->paginate($limit);
+
+        return $this->responseAPI(true, '', $celebrity, 200);
+    }
+
+    public function searchCelebrityV2(Request $request)
+    {
+        $request->validate([
+            'key' => 'required'
+        ]);
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+
+        $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('created_at', 'DESC')->paginate($limit);
+
+        return $this->responseAPI(true, '', $celebrity, 200);
+    }
 }
