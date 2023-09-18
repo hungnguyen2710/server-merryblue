@@ -14,6 +14,7 @@ class FakeMessageCelebrity extends Model
 
     protected $fillable = [
       'name',
+      'name_profile',
       'fake_message_category_celebrity_id',
       'avatar',
       'video',

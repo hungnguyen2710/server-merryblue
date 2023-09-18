@@ -46,7 +46,7 @@ class FakeMessageController extends AppBaseController
     public function listCelebrity(Request $request)
     {
 
-        $limit = isset($request->limit) ? $request->limit : 10;
+        $limit = isset($request->limit) ? $request->limit : 12;
         $offset = isset($request->offset) ? $request->offset : 0;
 
         $celebrity = FakeMessageCelebrity::orderBy('count', 'DESC')->offset($offset)->limit($limit)->get();
@@ -63,7 +63,7 @@ class FakeMessageController extends AppBaseController
     public function listCelebrityByCategory(Request $request)
     {
 
-        $limit = isset($request->limit) ? $request->limit : 10;
+        $limit = isset($request->limit) ? $request->limit : 12;
         $offset = isset($request->offset) ? $request->offset : 0;
         $categoryCelebrityId = $request->category_id;
         $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id', $categoryCelebrityId)->orderBy('count', 'DESC')->paginate($limit);
@@ -144,7 +144,7 @@ class FakeMessageController extends AppBaseController
     public function listCelebrityV2(Request $request)
     {
 
-        $limit = isset($request->limit) ? $request->limit : 10;
+        $limit = isset($request->limit) ? $request->limit : 12;
         $offset = isset($request->offset) ? $request->offset : 0;
 
         $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
@@ -167,7 +167,7 @@ class FakeMessageController extends AppBaseController
             'key' => 'required'
         ]);
 
-        $limit = isset($request->limit) ? $request->limit : 10;
+        $limit = isset($request->limit) ? $request->limit : 12;
 
         $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('created_at', 'DESC')->paginate($limit);
 
@@ -180,5 +180,44 @@ class FakeMessageController extends AppBaseController
             $celebrity->delete();
         }
         return $this->responseAPI(true, 'success', null, 200);
+    }
+
+    public function updateCelebrityV2(Request $request, $celebrityId)
+    {
+        $celebrity = FakeMessageCelebrity::where('id', $celebrityId)->first();
+
+        if ($celebrity) {
+            $request->validate([
+                'category_celebrity_id' => 'required',
+                'avatar' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'video' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:51200',
+            ]);
+            $avatar_path = '';
+            $video_path = '';
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatar_path = $avatar->store('images/avatar', ['disk' => 'public']);
+            }
+
+            if ($request->hasFile('video')) {
+                $video = $request->file('video');
+                $video_path = $video->store('images/video', ['disk' => 'public']);
+            }
+
+            $dataInput = [
+                'name' => $request->name ? $request->name : $celebrity->name,
+                'name_profile' => $request->name_profile ? $request->name_profile : $celebrity->name_profile,
+                'fake_message_category_celebrity_id' => $request->category_celebrity_id ? $request->category_celebrity_id : $celebrity->fake_message_category_celebrity_id,
+                'video' => $video_path ? $video_path : $celebrity->video,
+                'avatar' => $avatar_path ? $avatar_path : $celebrity->avatar,
+                'followers' => $request->followers ? $request->followers : $celebrity->followers,
+                'language_code' => $request->language_code ? $request->language_code : $celebrity->language_code,
+            ];
+
+            $celebrity->update($dataInput);
+            return $this->responseAPI(true, '', $celebrity, 200);
+        } else {
+            return $this->responseAPI(false, 'error', null, 400);
+        }
     }
 }
