@@ -49,7 +49,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
 
-        $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
+        $celebrity = FakeMessageCelebrity::orderBy('count', 'DESC')->offset($offset)->limit($limit)->get();
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
@@ -66,9 +66,7 @@ class FakeMessageController extends AppBaseController
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset : 0;
         $categoryCelebrityId = $request->category_id;
-        $celebrity = FakeMessageCelebrity::when(($categoryCelebrityId || isset($categoryCelebrityId)), function ($q) use ($categoryCelebrityId){
-            $q->where('fake_message_category_celebrity_id', $categoryCelebrityId);
-        })->orderBy('created_at', 'DESC')->paginate($limit);
+        $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id', $categoryCelebrityId)->orderBy('count', 'DESC')->paginate($limit);
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
