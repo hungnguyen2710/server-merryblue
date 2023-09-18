@@ -37,6 +37,7 @@ Route::group(['prefix' => 'v2'], function () {
             Route::get('/list', [FakeMessageController::class, 'listCelebrityV2']);
             Route::get('/search', [FakeMessageController::class, 'searchCelebrityV2']);
             Route::get('/delete/{celebrityId}', [FakeMessageController::class, 'deleteCelebrity']);
+            Route::post('/update/{celebrityId}', [FakeMessageController::class, 'updateCelebrityV2']);
         });
     });
 
