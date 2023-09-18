@@ -173,4 +173,12 @@ class FakeMessageController extends AppBaseController
 
         return $this->responseAPI(true, '', $celebrity, 200);
     }
+
+    public function deleteCelebrity($celebrityId){
+        $celebrity = FakeMessageCelebrity::where('id',$celebrityId)->first();
+        if ($celebrity){
+            $celebrity->delete();
+        }
+        return $this->responseAPI(true, 'success', null, 200);
+    }
 }
