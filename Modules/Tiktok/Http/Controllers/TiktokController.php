@@ -39,7 +39,7 @@ class TiktokController extends AppBaseController
                 $responses = Http::withHeaders([
                     'Accept' => 'application/json',
                 ])
-                    ->post('https://alldownloader.merryblue.llc/api/v1/tiktok/download',
+                    ->post('https://alldownloader-2.merryblue.llc/api/v1/tiktok/download',
                         [
                             'url' => $request->url
                         ]
@@ -75,7 +75,7 @@ class TiktokController extends AppBaseController
             $responses = Http::withHeaders([
                 'Accept' => 'application/json',
             ])
-                ->post('https://alldownloader.merryblue.llc/api/v1/tiktok/download',
+                ->post('https://alldownloader-2.merryblue.llc/api/v1/tiktok/download',
                     [
                         'url' => $request->url
                     ]
