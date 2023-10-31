@@ -292,7 +292,9 @@ class FakeMessageController extends AppBaseController
             ]);
 
             $celebrity = FakeMessageCelebrity::where('id', $request->celebrity_id)->first();
-            $celebrity->update(['count' => $celebrity->count + 1]);
+            if ($celebrity){
+                $celebrity->update(['count' => $celebrity->count + 1]);
+            }
 
             return $this->responseAPI(true, '', $logs, 200);
         }catch (\Exception $e){
