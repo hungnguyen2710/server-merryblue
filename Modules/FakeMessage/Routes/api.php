@@ -46,7 +46,7 @@ Route::group(['prefix' => 'v2'], function () {
 
 Route::group(['prefix' => 'v3'], function () {
 
-    Route::group(['prefix' => 'fake-message'], function () {
+    Route::group(['prefix' => 'fake-message', 'middleware' => ['checksum']], function () {
         Route::group(['prefix' => 'celebrity'], function () {
             Route::get('/list', [FakeMessageController::class, 'listCelebrityV3']);
             Route::get('/search', [FakeMessageController::class, 'searchCelebrityV3']);
@@ -55,6 +55,17 @@ Route::group(['prefix' => 'v3'], function () {
             Route::post('/logs/create', [FakeMessageController::class, 'createLogV3']);
         });
 
+    });
+
+});
+
+
+Route::group(['prefix' => 'v4'], function () {
+    Route::group(['prefix' => 'fake-message', 'middleware' => ['checksum']], function () {
+        Route::group(['prefix' => 'celebrity'], function () {
+            Route::get('/list', [FakeMessageController::class, 'listCelebrityV4']);
+            Route::get('/search', [FakeMessageController::class, 'searchCelebrityV2']);
+        });
     });
 
 });

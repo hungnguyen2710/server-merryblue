@@ -299,4 +299,36 @@ class FakeMessageController extends AppBaseController
             throw new Exception($e->getMessage());
         }
     }
+
+    public function listCelebrityV4(Request $request)
+    {
+
+        $limit = isset($request->limit) ? $request->limit : 12;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        try {
+            $celebrity = FakeMessageCelebrity::orderBy('created_at', 'DESC')->offset($offset)->limit($limit)->get();
+
+            return $this->responseAPI(true, '', $celebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function searchCelebrityV4(Request $request)
+    {
+        $request->validate([
+            'key' => 'required'
+        ]);
+
+        $limit = isset($request->limit) ? $request->limit : 12;
+
+        try {
+            $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('created_at', 'DESC')->paginate($limit);
+
+            return $this->responseAPI(true, '', $celebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
 }
