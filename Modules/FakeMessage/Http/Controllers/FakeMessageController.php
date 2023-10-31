@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Models\FakeMessageCategoryCelebrity;
 use App\Models\FakeMessageCelebrity;
 use App\Models\FakemessageLogs;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -216,6 +217,86 @@ class FakeMessageController extends AppBaseController
             return $this->responseAPI(true, '', $celebrity, 200);
         } else {
             return $this->responseAPI(false, 'error', null, 400);
+        }
+    }
+
+    public function listCelebrityV3(Request $request)
+    {
+
+        $limit = isset($request->limit) ? $request->limit : 12;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        try {
+            $celebrity = FakeMessageCelebrity::orderBy('count', 'DESC')->offset($offset)->limit($limit)->get();
+
+            return $this->responseAPI(true, '', $celebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function searchCelebrityV3(Request $request)
+    {
+        $request->validate([
+            'key' => 'required'
+        ]);
+
+        $limit = isset($request->limit) ? $request->limit : 10;
+        $offset = isset($request->offset) ? $request->offset : 0;
+
+        try {
+            $celebrity = FakeMessageCelebrity::where('name','LIKE','%'. $request->key .'%')->orderBy('count', 'DESC')->paginate($limit);
+
+            return $this->responseAPI(true, '', $celebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function listCelebrityByCategoryV3(Request $request)
+    {
+
+        $limit = isset($request->limit) ? $request->limit : 12;
+        $offset = isset($request->offset) ? $request->offset : 0;
+        $categoryCelebrityId = $request->category_id;
+        try{
+            $celebrity = FakeMessageCelebrity::where('fake_message_category_celebrity_id', $categoryCelebrityId)->orderBy('count', 'DESC')->paginate($limit);
+
+            return $this->responseAPI(true, '', $celebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function categoryCelebrityV3()
+    {
+        try {
+            $categoryCelebrity = FakeMessageCategoryCelebrity::all();
+            return $this->responseAPI(true, '', $categoryCelebrity, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function createLogV3(Request $request)
+    {
+        $request->validate([
+            'celebrity_id' => 'required',
+            'celebrity_name' => 'required',
+        ]);
+
+        try {
+            $logs = FakemessageLogs::create([
+                'celebrity_id' => $request->celebrity_id,
+                'celebrity_name' => $request->celebrity_name,
+            ]);
+
+            $celebrity = FakeMessageCelebrity::where('id', $request->celebrity_id)->first();
+            $celebrity->update(['count' => $celebrity->count + 1]);
+
+            return $this->responseAPI(true, '', $logs, 200);
+        }catch (\Exception $e){
+            throw new Exception($e->getMessage());
         }
     }
 }
